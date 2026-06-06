@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🚕 taxi売上</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.11.0/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#080c14;
+  --bg2:#0d1220;
+  --bg3:#111827;
+  --bg4:#1a2235;
+  --border:#1e2d45;
+  --border2:#253550;
+  --text:#e8f0fe;
+  --text2:#8ba3c7;
+  --text3:#4a6280;
+  --amber:#f5a623;
+  --amber2:#ffbf47;
+  --amber-glow:rgba(245,166,35,0.18);
+  --cyan:#00d4ff;
+  --cyan2:#5eefff;
+  --cyan-glow:rgba(0,212,255,0.15);
+  --green:#00e676;
+  --green-glow:rgba(0,230,118,0.15);
+  --red:#ff4757;
+  --red-glow:rgba(255,71,87,0.18);
+  --purple:#b388ff;
+  --radius:14px;
+  --radius-sm:9px;
+}
+
+html,body{
+  height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Noto Sans JP','Hiragino Sans',sans-serif;
+  overflow:hidden;
+}
+.app{
+  max-width:430px;
+  margin:0 auto;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  background:var(--bg);
+  position:relative;
+  overflow:hidden;
+}
+
+/* CITY BG GLOW */
+.app::before{
+  content:'';
+  position:fixed;
+  top:-120px;left:50%;
+  transform:translateX(-50%);
+  width:500px;height:300px;
+  background:radial-gradient(ellipse at center, rgba(245,166,35,0.07) 0%, transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
+/* HEADER */
+.header{
+  background:rgba(13,18,32,0.95);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  padding:12px 16px 10px;
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:20;
+  flex-shrink:0;
+}
+.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.logo{display:flex;align-items:center;gap:8px;}
+.logo-icon{
+  background:linear-gradient(135deg,#f5a623,#ff8c00);
+  color:#000;border-radius:8px;padding:4px 8px;
+  font-size:15px;font-weight:900;
+  box-shadow:0 0 16px rgba(245,166,35,0.5);
+  font-family:'Rajdhani',sans-serif;
+  letter-spacing:-0.5px;
+}
+.logo-text{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:1px;}
+.logo-text .t{color:var(--amber);}
+.logo-text .s{color:var(--text2);font-size:13px;font-weight:500;margin-left:2px;}
+.header-icons{display:flex;gap:7px;}
+.icon-btn{
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  border-radius:8px;padding:6px 9px;
+  cursor:pointer;color:var(--text2);
+  font-size:17px;line-height:1;
+  transition:all .2s;position:relative;
+}
+.icon-btn:hover{border-color:var(--amber);color:var(--amber);}
+.badge{
+  position:absolute;top:-5px;right:-5px;
+  background:var(--red);color:#fff;
+  border-radius:50%;width:15px;height:15px;
+  font-size:9px;display:flex;align-items:center;justify-content:center;
+  font-weight:700;border:2px solid var(--bg);
+  animation:pulse-red 2s infinite;
+}
+@keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(255,71,87,.5);}50%{box-shadow:0 0 0 4px rgba(255,71,87,0);}}
+.header-sub{display:flex;justify-content:space-between;align-items:center;}
+.datetime{font-size:11px;color:var(--text3);font-family:'Rajdhani',sans-serif;letter-spacing:.5px;}
+.period-badge{
+  background:var(--bg4);border:1px solid var(--border2);
+  border-radius:20px;font-size:10px;padding:2px 10px;color:var(--text2);
+}
+
+/* SCREENS */
+.screen{display:none;flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:72px;scroll-behavior:smooth;}
+.screen::-webkit-scrollbar{width:0;}
+.screen.active{display:block;animation:fadeIn .25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+.content{padding:12px;display:flex;flex-direction:column;gap:12px;}
+
+/* CARDS */
+.card{
+  background:rgba(17,24,39,0.8);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:14px;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  position:relative;overflow:hidden;
+  transition:border-color .2s;
+}
+.card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.02) 0%,transparent 60%);
+  pointer-events:none;
+}
+.card-title{
+  font-size:11px;color:var(--text3);
+  margin-bottom:10px;
+  display:flex;align-items:center;gap:5px;
+  text-transform:uppercase;letter-spacing:1px;
+  font-weight:600;
+}
+.card-title i{font-size:14px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* HERO CARD - GOAL */
+.hero-card{
+  background:linear-gradient(135deg,rgba(245,166,35,0.08) 0%,rgba(0,212,255,0.05) 100%);
+  border:1px solid rgba(245,166,35,0.25);
+  border-radius:var(--radius);padding:16px;
+  position:relative;overflow:hidden;
+}
+.hero-card::after{
+  content:'';position:absolute;
+  top:-40px;right:-40px;
+  width:160px;height:160px;
+  background:radial-gradient(circle,rgba(245,166,35,.1) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
+.hero-target{font-family:'Rajdhani',sans-serif;font-size:13px;color:var(--text2);margin-bottom:10px;}
+.hero-target span{font-size:20px;color:var(--text);font-weight:700;}
+.hero-current{font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;color:var(--amber);line-height:1;
+  text-shadow:0 0 20px rgba(245,166,35,.4);}
+.hero-remaining{font-size:12px;color:var(--red);margin-top:4px;font-weight:600;}
+.hero-note{font-size:10px;color:var(--text3);margin-top:6px;}
+.hero-bottom{display:flex;justify-content:space-between;align-items:flex-end;margin-top:12px;}
+.hero-pct{font-family:'Rajdhani',sans-serif;font-size:42px;font-weight:700;color:var(--cyan);line-height:1;
+  text-shadow:0 0 20px rgba(0,212,255,.4);}
+.hero-pct-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;}
+
+/* RING PROGRESS */
+.ring-wrap{position:relative;flex-shrink:0;}
+.ring-wrap svg{display:block;}
+.ring-center{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+}
+.ring-val{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--cyan);line-height:1;}
+.ring-sub{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
+
+/* PROGRESS BAR */
+.prog-bar{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;margin:6px 0;}
+.prog-fill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.prog-amber{background:linear-gradient(90deg,var(--amber),var(--amber2));}
+.prog-cyan{background:linear-gradient(90deg,var(--cyan),var(--cyan2));}
+
+/* STATUS ROWS */
+.stat-row{
+  display:flex;justify-content:space-between;
+  font-size:12px;padding:4px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.stat-row:last-child{border-bottom:none;}
+.stat-row .k{color:var(--text3);}
+.stat-row .v{color:var(--text);font-weight:500;font-family:'Rajdhani',sans-serif;font-size:13px;}
+.stat-row .v.hl{color:var(--green);text-shadow:0 0 10px var(--green-glow);}
+
+/* ACTION BUTTONS */
+.action-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.act-btn{
+  border:none;border-radius:var(--radius);
+  padding:16px 10px;
+  font-size:16px;font-weight:700;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  transition:transform .15s,box-shadow .15s;
+  position:relative;overflow:hidden;
+  font-family:'Noto Sans JP',sans-serif;
+}
+.act-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.12),transparent);
+}
+.act-btn:active{transform:scale(.95);}
+.act-btn small{font-size:10px;font-weight:400;opacity:.8;}
+.act-btn-on{
+  background:linear-gradient(135deg,#00c853,#00e676);
+  color:#000;
+  box-shadow:0 4px 20px rgba(0,230,118,.35);
+}
+.act-btn-on:active{box-shadow:0 2px 10px rgba(0,230,118,.2);}
+.act-btn-off{
+  background:linear-gradient(135deg,#c62828,#ff4757);
+  color:#fff;
+  box-shadow:0 4px 20px rgba(255,71,87,.35);
+}
+.act-btn-off:active{box-shadow:0 2px 10px rgba(255,71,87,.2);}
+
+/* INPUT SECTION */
+.input-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;margin-bottom:12px;}
+.inp-item{display:flex;flex-direction:column;gap:3px;}
+.inp-item label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
+.inp-item input{
+  background:var(--bg4);
+  border:1px solid var(--border2);
+  border-radius:var(--radius-sm);
+  color:var(--text);font-size:13px;
+  padding:7px 6px;text-align:right;width:100%;outline:none;
+  font-family:'Rajdhani',sans-serif;font-weight:600;
+  transition:border-color .2s,box-shadow .2s;
+}
+.inp-item input:focus{border-color:var(--amber);box-shadow:0 0 0 3px var(--amber-glow);}
+.sec-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:600;}
+.tag-group{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.tag{
+  background:var(--bg4);border:1px solid var(--border2);
+  border-radius:20px;font-size:11px;padding:4px 12px;
+  cursor:pointer;color:var(--text2);
+  transition:all .18s;user-select:none;
+  font-weight:500;
+}
+.tag:hover{border-color:var(--amber);color:var(--amber);}
+.tag.active{
+  background:var(--amber-glow);
+  border-color:var(--amber);
+  color:var(--amber);font-weight:700;
+  box-shadow:0 0 12px var(--amber-glow);
+}
+.memo-row{display:flex;gap:7px;margin-top:4px;}
+.memo-in{
+  flex:1;background:var(--bg4);
+  border:1px solid var(--border2);border-radius:var(--radius-sm);
+  color:var(--text);font-size:12px;padding:8px 10px;outline:none;
+  transition:border-color .2s;
+  font-family:'Noto Sans JP',sans-serif;
+}
+.memo-in:focus{border-color:var(--cyan);}
+.save-btn{
+  background:linear-gradient(135deg,var(--cyan),#0099bb);
+  color:#000;border:none;border-radius:var(--radius-sm);
+  font-size:13px;font-weight:700;padding:8px 18px;cursor:pointer;
+  white-space:nowrap;
+  box-shadow:0 4px 16px var(--cyan-glow);
+  font-family:'Noto Sans JP',sans-serif;
+  transition:transform .15s,box-shadow .15s;
+}
+.save-btn:active{transform:scale(.96);box-shadow:none;}
+
+/* PIE */
+.pie-wrap{display:flex;gap:10px;align-items:center;}
+.pie-legend{flex:1;display:flex;flex-direction:column;gap:4px;}
+.leg-row{display:flex;align-items:center;gap:6px;font-size:11px;}
+.leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.leg-name{color:var(--text2);flex:1;}
+.leg-pct{color:var(--text);font-weight:700;font-family:'Rajdhani',sans-serif;font-size:13px;}
+
+/* PAY BREAKDOWN */
+.pay-row{display:flex;align-items:center;gap:7px;font-size:11px;margin-bottom:5px;}
+.pay-bar-bg{flex:1;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;}
+.pay-bar{height:100%;border-radius:2px;transition:width .8s ease;}
+.pay-name{color:var(--text2);min-width:62px;font-size:10px;}
+.pay-val{color:var(--text);font-weight:600;min-width:50px;text-align:right;font-family:'Rajdhani',sans-serif;font-size:12px;}
+.pay-pct{color:var(--text3);min-width:24px;text-align:right;font-size:10px;}
+
+/* MAP */
+.map-ph{background:linear-gradient(135deg,#0a1628,#0d1f38);border-radius:var(--radius-sm);height:115px;position:relative;overflow:hidden;margin-top:8px;}
+.map-dot{position:absolute;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);transition:all .3s;}
+.map-footer{display:flex;justify-content:space-between;align-items:center;margin-top:5px;font-size:10px;color:var(--text3);}
+.fullmap-btn{background:var(--bg4);border:1px solid var(--border2);border-radius:6px;font-size:10px;padding:2px 8px;cursor:pointer;color:var(--text2);display:flex;align-items:center;gap:3px;transition:all .2s;}
+.fullmap-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+
+/* STATS BIG */
+.big-num{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:var(--amber);text-shadow:0 0 14px var(--amber-glow);}
+
+/* GPS CARD */
+.gps-card{
+  background:linear-gradient(135deg,rgba(0,212,255,0.06) 0%,rgba(0,230,118,0.04) 100%);
+  border:1px solid rgba(0,212,255,0.2);
+}
+.gps-live-dot{
+  display:inline-block;width:7px;height:7px;border-radius:50%;
+  background:var(--green);margin-right:5px;vertical-align:middle;
+  box-shadow:0 0 8px var(--green);
+  animation:blink 1.4s infinite;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.gps-addr{font-size:12px;color:var(--text2);margin-bottom:8px;line-height:1.5;}
+.gps-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;}
+.gps-item{background:var(--bg4);border-radius:7px;padding:5px 8px;}
+.gps-item-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:1px;}
+.gps-item-val{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:var(--text);}
+.gps-item-val.speed{color:var(--cyan);font-size:18px;text-shadow:0 0 10px var(--cyan-glow);}
+.gps-map-btn{
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.25);
+  border-radius:8px;padding:7px;font-size:11px;cursor:pointer;
+  color:var(--cyan);width:100%;transition:all .2s;font-weight:600;
+}
+.gps-map-btn:hover{background:rgba(0,212,255,0.15);}
+.gps-permission{
+  text-align:center;padding:10px 0;
+  font-size:11px;color:var(--text3);
+}
+.gps-permission button{
+  margin-top:6px;background:rgba(0,212,255,0.1);
+  border:1px solid rgba(0,212,255,0.3);border-radius:7px;
+  color:var(--cyan);font-size:11px;padding:5px 14px;cursor:pointer;
+  transition:all .2s;display:block;width:100%;
+}
+.gps-permission button:hover{background:rgba(0,212,255,0.2);}
+.sale-loc{
+  display:flex;align-items:center;gap:4px;
+  font-size:10px;color:var(--text3);margin-top:4px;
+}
+.sale-loc i{font-size:11px;color:var(--cyan);}
+
+/* ANALYTICS + CALENDAR */
+#analytics-content .card{margin-bottom:0;}
+#cal-grid > div:not(:empty):hover{filter:brightness(1.2);transform:scale(1.04);}
+
+/* ===== LIST SCREEN ===== */
+.sub-header{
+  background:rgba(13,18,32,0.95);backdrop-filter:blur(20px);
+  padding:11px 14px 9px;
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:5;
+}
+.sub-header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.sub-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;letter-spacing:.5px;display:flex;align-items:center;gap:6px;}
+.csv-btn{
+  background:var(--bg4);border:1px solid var(--border2);
+  border-radius:8px;padding:5px 12px;
+  font-size:11px;cursor:pointer;color:var(--text2);
+  display:flex;align-items:center;gap:4px;
+  transition:all .2s;
+}
+.csv-btn:hover{border-color:var(--green);color:var(--green);}
+.list-summary{display:flex;gap:7px;margin-bottom:8px;}
+.sum-chip{
+  flex:1;background:var(--bg4);
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:7px 6px;text-align:center;
+}
+.sum-v{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;}
+.sum-l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
+.filter-bar{display:flex;gap:6px;overflow-x:auto;}
+.filter-bar::-webkit-scrollbar{display:none;}
+.fchip{
+  background:var(--bg4);border:1px solid var(--border2);
+  border-radius:20px;font-size:11px;padding:4px 12px;
+  cursor:pointer;color:var(--text2);white-space:nowrap;
+  transition:all .18s;font-weight:500;
+}
+.fchip.active{background:var(--amber-glow);border-color:var(--amber);color:var(--amber);font-weight:700;}
+.sale-list{padding:10px 12px;display:flex;flex-direction:column;gap:8px;}
+.sale-card{
+  background:rgba(17,24,39,0.9);
+  border:1px solid var(--border);
+  border-radius:var(--radius);padding:12px 13px;
+  position:relative;overflow:hidden;
+  transition:border-color .2s;
+  animation:slideIn .2s ease;
+}
+@keyframes slideIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:none;}}
+.sale-card:hover{border-color:var(--border2);}
+.sale-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--amber);border-radius:3px 0 0 3px;}
+.sale-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px;}
+.sale-time{font-size:11px;color:var(--text3);margin-bottom:2px;}
+.sale-amount{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--amber);text-shadow:0 0 10px var(--amber-glow);}
+.sale-fare-detail{text-align:right;font-size:11px;color:var(--text3);line-height:1.6;}
+.sale-badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;}
+.sbadge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;}
+.sbadge-cat{background:rgba(0,212,255,.12);color:var(--cyan);border:1px solid rgba(0,212,255,.2);}
+.sbadge-pay{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.2);}
+.sbadge-memo{background:rgba(245,166,35,.1);color:var(--amber);border:1px solid rgba(245,166,35,.2);}
+.sale-acts{display:flex;gap:6px;margin-top:9px;padding-top:9px;border-top:1px solid var(--border);}
+.sale-act{
+  flex:1;background:var(--bg4);
+  border:1px solid var(--border2);border-radius:7px;
+  font-size:11px;padding:5px;cursor:pointer;
+  color:var(--text2);display:flex;align-items:center;justify-content:center;gap:3px;
+  transition:all .18s;
+}
+.sale-act:hover{border-color:var(--cyan);color:var(--cyan);}
+.sale-act.del:hover{border-color:var(--red);color:var(--red);}
+.empty-state{text-align:center;padding:50px 20px;color:var(--text3);}
+.empty-state i{font-size:44px;margin-bottom:12px;display:block;opacity:.4;}
+.empty-state p{font-size:13px;line-height:1.8;}
+
+/* ===== SETTINGS SCREEN ===== */
+.settings-content{padding:12px;display:flex;flex-direction:column;gap:10px;}
+.settings-section{margin-bottom:4px;}
+.settings-section-title{
+  font-size:10px;color:var(--text3);
+  text-transform:uppercase;letter-spacing:1.5px;font-weight:600;
+  padding:0 4px;margin-bottom:8px;
+}
+.settings-card{
+  background:rgba(17,24,39,0.8);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+.settings-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:13px 14px;border-bottom:1px solid var(--border);
+}
+.settings-row:last-child{border-bottom:none;}
+.settings-row-left{display:flex;flex-direction:column;gap:2px;}
+.settings-row-left span:first-child{font-size:13px;font-weight:500;}
+.settings-row-left span:last-child{font-size:11px;color:var(--text3);}
+.settings-input{
+  background:var(--bg4);border:1px solid var(--border2);
+  border-radius:8px;color:var(--amber);
+  font-size:14px;font-weight:700;
+  padding:6px 10px;text-align:right;
+  outline:none;width:120px;
+  font-family:'Rajdhani',sans-serif;
+  transition:border-color .2s,box-shadow .2s;
+}
+.settings-input:focus{border-color:var(--amber);box-shadow:0 0 0 3px var(--amber-glow);}
+.settings-save-btn{
+  width:100%;background:linear-gradient(135deg,var(--amber),#e8960a);
+  color:#000;border:none;border-radius:var(--radius);
+  font-size:15px;font-weight:700;padding:13px;cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;
+  box-shadow:0 4px 20px var(--amber-glow);
+  transition:transform .15s,box-shadow .15s;
+  letter-spacing:.5px;
+}
+.settings-save-btn:active{transform:scale(.97);box-shadow:none;}
+.settings-danger-btn{
+  width:100%;background:transparent;
+  border:1px solid rgba(255,71,87,.3);
+  color:var(--red);border-radius:var(--radius);
+  font-size:13px;font-weight:600;padding:11px;cursor:pointer;
+  transition:all .2s;
+}
+.settings-danger-btn:hover{background:var(--red-glow);border-color:var(--red);}
+
+/* BOTTOM NAV */
+.bottom-nav{
+  display:flex;
+  background:rgba(13,18,32,0.97);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  position:fixed;bottom:0;
+  left:50%;transform:translateX(-50%);
+  width:100%;max-width:430px;
+  z-index:20;
+  flex-shrink:0;
+}
+.nav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:9px 0 6px;cursor:pointer;gap:2px;
+  transition:all .18s;position:relative;
+}
+.nav-item i{font-size:21px;color:var(--text3);transition:all .18s;}
+.nav-item span{font-size:9px;color:var(--text3);transition:all .18s;font-weight:500;}
+.nav-item.active i,.nav-item.active span{color:var(--amber);}
+.nav-item.active::before{
+  content:'';position:absolute;top:0;left:50%;
+  transform:translateX(-50%);
+  width:28px;height:2px;
+  background:linear-gradient(90deg,var(--amber),var(--amber2));
+  border-radius:0 0 3px 3px;
+  box-shadow:0 0 8px var(--amber-glow);
+}
+.nav-item:not(.active):hover i{color:var(--text2);}
+
+/* MODAL */
+.modal-bg{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.8);
+  backdrop-filter:blur(6px);
+  z-index:100;align-items:flex-end;justify-content:center;
+}
+.modal-bg.open{display:flex;}
+.modal{
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:20px 20px 0 0;
+  padding:20px 16px;
+  width:100%;max-width:430px;
+  animation:slideUp .28s cubic-bezier(.34,1.56,.64,1);
+  max-height:90vh;overflow-y:auto;
+}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.modal-title{
+  font-family:'Rajdhani',sans-serif;
+  font-size:18px;font-weight:700;
+  margin-bottom:14px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.modal-close{
+  background:var(--bg4);border:1px solid var(--border2);
+  border-radius:7px;padding:4px 8px;
+  cursor:pointer;color:var(--text2);font-size:15px;
+  transition:all .2s;
+}
+.modal-close:hover{border-color:var(--red);color:var(--red);}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.modal-field{display:flex;flex-direction:column;gap:4px;}
+.modal-field label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
+.modal-field input{
+  background:var(--bg4);border:1px solid var(--border2);
+  border-radius:8px;color:var(--text);font-size:14px;
+  padding:8px 10px;outline:none;width:100%;
+  font-family:'Rajdhani',sans-serif;font-weight:600;
+  transition:border-color .2s,box-shadow .2s;
+}
+.modal-field input:focus{border-color:var(--amber);box-shadow:0 0 0 3px var(--amber-glow);}
+.modal-save{
+  width:100%;background:linear-gradient(135deg,var(--cyan),#009ab8);
+  color:#000;border:none;border-radius:10px;
+  font-size:14px;font-weight:700;padding:12px;cursor:pointer;
+  margin-top:10px;font-family:'Noto Sans JP',sans-serif;
+  transition:transform .15s;
+}
+.modal-save:active{transform:scale(.97);}
+
+/* CONFIRM */
+.confirm-bg{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.8);backdrop-filter:blur(6px);
+  z-index:110;align-items:center;justify-content:center;
+}
+.confirm-bg.open{display:flex;}
+.confirm-box{
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:16px;padding:22px 20px;
+  width:290px;text-align:center;
+  animation:popIn .22s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn{from{transform:scale(.85);opacity:0;}to{transform:none;opacity:1;}}
+.confirm-icon{font-size:36px;margin-bottom:8px;}
+.confirm-title{font-size:16px;font-weight:700;margin-bottom:4px;}
+.confirm-sub{font-size:12px;color:var(--text2);margin-bottom:18px;line-height:1.6;}
+.confirm-btns{display:flex;gap:8px;}
+.confirm-btn{
+  flex:1;border:1px solid var(--border2);
+  border-radius:10px;font-size:13px;font-weight:600;
+  padding:10px;cursor:pointer;
+  background:var(--bg4);color:var(--text2);
+  transition:all .18s;
+}
+.confirm-btn:hover{border-color:var(--text2);color:var(--text);}
+.confirm-btn.danger{
+  background:linear-gradient(135deg,#c62828,#ff4757);
+  border-color:transparent;color:#fff;
+  box-shadow:0 4px 14px var(--red-glow);
+}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:82px;
+  left:50%;transform:translateX(-50%) translateY(10px);
+  background:rgba(13,18,32,.97);
+  border:1px solid var(--border2);border-radius:10px;
+  padding:9px 18px;font-size:12px;font-weight:600;
+  color:var(--text);opacity:0;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  z-index:200;white-space:nowrap;pointer-events:none;
+  backdrop-filter:blur(10px);
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.ok{border-color:var(--green);color:var(--green);}
+.toast.ng{border-color:var(--red);color:var(--red);}
+.toast.info{border-color:var(--cyan);color:var(--cyan);}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo">
+      <span class="logo-icon">🚕</span>
+      <span class="logo-text"><span class="t">taxi</span><span class="s">売上管理</span></span>
+    </div>
+    <div class="header-icons">
+      <div class="icon-btn"><i class="ti ti-bell"></i><span class="badge">3</span></div>
+    </div>
+  </div>
+  <div class="header-sub">
+    <span class="datetime" id="dt">---</span>
+    <span class="period-badge">21〜20日締め</span>
+  </div>
+</div>
+
+<!-- ===== HOME ===== -->
+<div class="screen active" id="sc-home">
+<div class="content">
+
+  <!-- GPS CURRENT LOCATION CARD -->
+  <div class="card gps-card" id="gps-card">
+    <div class="card-title" style="margin-bottom:8px;">
+      <i class="ti ti-map-pin"></i>現在地
+      <span style="margin-left:auto;display:flex;align-items:center;gap:4px;">
+        <span class="gps-live-dot"></span>
+        <span style="font-size:10px;color:var(--green);font-weight:600;" id="gps-status">取得中...</span>
+      </span>
+    </div>
+    <div id="gps-body">
+      <div class="gps-permission">
+        <div style="font-size:22px;margin-bottom:6px;">📍</div>
+        <div>位置情報の使用を許可すると<br>現在地が表示されます</div>
+        <button onclick="startGPS()"><i class="ti ti-map-pin" style="font-size:12px;vertical-align:-1px;margin-right:4px"></i>位置情報を有効にする</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO GOAL CARD -->
+  <div class="hero-card" id="hero">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+      <div style="flex:1;">
+        <div class="card-title" style="margin-bottom:6px;"><i class="ti ti-target"></i>本日の目標</div>
+        <div class="hero-target">目標 <span id="h-goal">¥45,000</span></div>
+        <div class="hero-current" id="h-cur">¥0</div>
+        <div class="hero-remaining" id="h-rem">残り ¥45,000</div>
+        <div class="hero-note" id="h-note">必要日額 ¥44,335</div>
+        <div style="margin-top:10px;">
+          <div class="prog-bar"><div class="prog-fill prog-amber" id="h-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <div class="ring-wrap">
+          <svg width="88" height="88" viewBox="0 0 88 88">
+            <circle cx="44" cy="44" r="36" fill="none" stroke="#1a2235" stroke-width="10"/>
+            <circle cx="44" cy="44" r="36" fill="none" stroke="url(#ringGrad)" stroke-width="10"
+              id="ring-circle" stroke-dasharray="0 226.2" stroke-linecap="round"
+              transform="rotate(-90 44 44)" style="transition:stroke-dasharray 1.2s cubic-bezier(.4,0,.2,1)"/>
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#00d4ff"/>
+                <stop offset="100%" stop-color="#5eefff"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-val" id="h-pct">0%</div>
+            <div class="ring-sub">達成率</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTHLY + STATUS -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-chart-bar"></i>月間目標</div>
+      <div class="stat-row"><span class="k">目標</span><span class="v" id="m-goal-d">¥1,200,000</span></div>
+      <div class="stat-row"><span class="k">現在</span><span class="v" style="color:var(--amber);" id="m-cur">¥0</span></div>
+      <div class="stat-row"><span class="k">残り</span><span class="v" style="color:var(--red);" id="m-rem">¥1,200,000</span></div>
+      <div class="prog-bar"><div class="prog-fill prog-amber" id="m-bar" style="width:0%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:2px;">
+        <span>残り<span id="m-days">8</span>日</span>
+        <span style="color:var(--amber);font-family:'Rajdhani',sans-serif;font-weight:700;" id="m-pct">0%</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-activity"></i>営業状況</div>
+      <div class="stat-row"><span class="k">出庫</span><span class="v">15:10</span></div>
+      <div class="stat-row"><span class="k">拘束</span><span class="v" id="elapsed">--:--</span></div>
+      <div class="stat-row"><span class="k">乗車数</span><span class="v" style="color:var(--cyan);" id="st-cnt">0回</span></div>
+      <div class="stat-row"><span class="k">平均単価</span><span class="v" id="st-avg">¥0</span></div>
+      <div class="stat-row"><span class="k">実車率</span><span class="v hl" id="st-rate">--</span></div>
+    </div>
+  </div>
+
+  <!-- ACTION -->
+  <div class="action-btns">
+    <button class="act-btn act-btn-on" onclick="recordRide('on')">
+      <i class="ti ti-car" style="font-size:26px"></i>乗車<small>乗車地点を記録</small>
+    </button>
+    <button class="act-btn act-btn-off" onclick="recordRide('off')">
+      <i class="ti ti-flag-2" style="font-size:26px"></i>降車<small>降車地点を記録</small>
+    </button>
+  </div>
+
+  <!-- SALES INPUT -->
+  <div class="card">
+    <div class="card-title"><i class="ti ti-currency-yen"></i>今回の売上入力</div>
+    <div class="input-row">
+      <div class="inp-item"><label>運賃</label><input type="number" id="i-fare" value="0" min="0"></div>
+      <div class="inp-item"><label>高速代</label><input type="number" id="i-hw" value="0" min="0"></div>
+      <div class="inp-item"><label>迎車</label><input type="number" id="i-pk" value="0" min="0"></div>
+      <div class="inp-item"><label>チップ</label><input type="number" id="i-tip" value="0" min="0"></div>
+    </div>
+    <div class="sec-label">乗車区分</div>
+    <div class="tag-group" id="cat-tags">
+      <span class="tag" data-val="流し" onclick="selectTag(this,'cat-tags')">流し</span>
+      <span class="tag" data-val="待機" onclick="selectTag(this,'cat-tags')">待機</span>
+      <span class="tag active" data-val="アプリ" onclick="selectTag(this,'cat-tags')">アプリ</span>
+      <span class="tag" data-val="予約" onclick="selectTag(this,'cat-tags')">予約</span>
+      <span class="tag" data-val="無線" onclick="selectTag(this,'cat-tags')">無線</span>
+    </div>
+    <div class="sec-label">支払方法</div>
+    <div class="tag-group" id="pay-tags">
+      <span class="tag" data-val="現金" onclick="selectTag(this,'pay-tags')">現金</span>
+      <span class="tag active" data-val="クレカ" onclick="selectTag(this,'pay-tags')">クレカ</span>
+      <span class="tag" data-val="アプリ決済" onclick="selectTag(this,'pay-tags')">アプリ決済</span>
+      <span class="tag" data-val="タクチケ" onclick="selectTag(this,'pay-tags')">タクチケ</span>
+      <span class="tag" data-val="電子マネー" onclick="selectTag(this,'pay-tags')">電子マネー</span>
+    </div>
+    <div class="sec-label">メモ（任意）</div>
+    <div class="memo-row">
+      <input class="memo-in" id="i-memo" type="text" placeholder="メモを入力...">
+      <button class="save-btn" onclick="saveSale()">保存</button>
+    </div>
+  </div>
+
+  <!-- TODAY STATS + PIE -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-receipt"></i>本日の集計</div>
+      <div style="margin-bottom:6px;"><div style="font-size:10px;color:var(--text3)">売上金額</div><div class="big-num" id="s-tot">¥0</div></div>
+      <div class="stat-row"><span class="k">乗車回数</span><span class="v" id="s-cnt">0回</span></div>
+      <div class="stat-row"><span class="k">平均単価</span><span class="v" id="s-avg">¥0</span></div>
+      <div class="stat-row"><span class="k">最高単価</span><span class="v" style="color:var(--green);" id="s-max">¥0</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-chart-donut"></i>乗車区分別</div>
+      <div class="pie-wrap">
+        <svg id="pie-svg" width="72" height="72" viewBox="0 0 72 72" style="flex-shrink:0;"></svg>
+        <div class="pie-legend" id="pie-leg"><div style="font-size:10px;color:var(--text3);">データなし</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAY + MAP -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-credit-card"></i>支払方法別</div>
+      <div id="pay-bd"><div style="font-size:11px;color:var(--text3);text-align:center;padding:8px 0;">データなし</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-map-2"></i>営業マップ</div>
+      <div style="font-size:9px;color:var(--text3);display:flex;gap:10px;margin-bottom:4px;">
+        <span><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:3px;vertical-align:middle"></span>乗車</span>
+        <span><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red);margin-right:3px;vertical-align:middle"></span>降車</span>
+      </div>
+      <div class="map-ph" id="mapbox">
+        <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.12" viewBox="0 0 150 115" preserveAspectRatio="none">
+          <line x1="50" y1="0" x2="50" y2="115" stroke="#00d4ff" stroke-width=".6"/>
+          <line x1="100" y1="0" x2="100" y2="115" stroke="#00d4ff" stroke-width=".6"/>
+          <line x1="0" y1="38" x2="150" y2="38" stroke="#00d4ff" stroke-width=".6"/>
+          <line x1="0" y1="77" x2="150" y2="77" stroke="#00d4ff" stroke-width=".6"/>
+          <line x1="5" y1="57" x2="145" y2="57" stroke="#f5a623" stroke-width="1" opacity=".6"/>
+          <line x1="75" y1="5" x2="75" y2="110" stroke="#f5a623" stroke-width="1" opacity=".6"/>
+        </svg>
+        <div id="mapdots"></div>
+        <span style="font-size:9px;color:#8ba3c7;position:relative;z-index:1;background:rgba(8,12,20,.7);padding:2px 7px;border-radius:4px;">大阪市北区</span>
+      </div>
+      <div class="map-footer">
+        <span>Google Maps</span>
+        <button class="fullmap-btn"><i class="ti ti-arrows-maximize" style="font-size:10px"></i>全画面</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- end home -->
+
+<!-- ===== LIST ===== -->
+<div class="screen" id="sc-list">
+  <div class="sub-header">
+    <div class="sub-header-top">
+      <span class="sub-title"><i class="ti ti-list"></i>売上一覧</span>
+      <button class="csv-btn" onclick="exportCSV()"><i class="ti ti-download" style="font-size:13px"></i>CSV出力</button>
+    </div>
+    <div class="list-summary">
+      <div class="sum-chip"><div class="sum-v" id="l-tot" style="color:var(--amber)">¥0</div><div class="sum-l">総売上</div></div>
+      <div class="sum-chip"><div class="sum-v" id="l-cnt" style="color:var(--cyan)">0件</div><div class="sum-l">乗車数</div></div>
+      <div class="sum-chip"><div class="sum-v" id="l-avg" style="color:var(--green)">¥0</div><div class="sum-l">平均単価</div></div>
+    </div>
+    <div class="filter-bar">
+      <span class="fchip active" data-f="all" onclick="setFilter(this)">すべて</span>
+      <span class="fchip" data-f="今日" onclick="setFilter(this)">今日</span>
+      <span class="fchip" data-f="流し" onclick="setFilter(this)">流し</span>
+      <span class="fchip" data-f="待機" onclick="setFilter(this)">待機</span>
+      <span class="fchip" data-f="アプリ" onclick="setFilter(this)">アプリ</span>
+      <span class="fchip" data-f="予約" onclick="setFilter(this)">予約</span>
+      <span class="fchip" data-f="無線" onclick="setFilter(this)">無線</span>
+      <span class="fchip" data-f="現金" onclick="setFilter(this)">現金</span>
+      <span class="fchip" data-f="クレカ" onclick="setFilter(this)">クレカ</span>
+    </div>
+  </div>
+  <div class="sale-list" id="sale-list"></div>
+</div>
+
+<!-- ===== SETTINGS ===== -->
+<div class="screen" id="sc-settings">
+  <div class="settings-content">
+    <div class="settings-section">
+      <div class="settings-section-title">目標設定</div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span>本日の目標金額</span>
+            <span>達成したい1日の売上</span>
+          </div>
+          <input class="settings-input" type="number" id="set-daily" min="0" step="1000">
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span>月間目標金額</span>
+            <span>1ヶ月の売上目標</span>
+          </div>
+          <input class="settings-input" type="number" id="set-monthly" min="0" step="10000">
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span>残り営業日数</span>
+            <span>今月の残り稼働予定日</span>
+          </div>
+          <input class="settings-input" type="number" id="set-days" min="1" max="31" style="width:80px;" value="8">
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">締め設定</div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span>締め日</span>
+            <span>毎月この日に集計リセット</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <input class="settings-input" type="number" id="set-close" min="1" max="31" style="width:70px;" value="20">
+            <span style="font-size:12px;color:var(--text3)">日</span>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <span>出庫時刻</span>
+            <span>営業開始時刻の設定</span>
+          </div>
+          <input class="settings-input" type="time" id="set-start" style="width:100px;font-size:13px;" value="15:10">
+        </div>
+      </div>
+    </div>
+
+    <button class="settings-save-btn" onclick="saveSettings()">
+      <i class="ti ti-device-floppy" style="font-size:16px;vertical-align:-2px;margin-right:6px"></i>設定を保存する
+    </button>
+
+    <div class="settings-section" style="margin-top:8px;">
+      <div class="settings-section-title">データ管理</div>
+      <div class="settings-card">
+        <div class="settings-row" style="flex-direction:column;align-items:flex-start;gap:6px;">
+          <div class="settings-row-left">
+            <span>データのエクスポート</span>
+            <span>全売上データをCSVで出力</span>
+          </div>
+          <button class="csv-btn" onclick="exportCSV()" style="width:100%;justify-content:center;padding:8px;border-radius:8px;">
+            <i class="ti ti-download"></i>全データをCSV出力
+          </button>
+        </div>
+      </div>
+      <div style="margin-top:8px;">
+        <button class="settings-danger-btn" onclick="openClearConfirm()">
+          <i class="ti ti-trash" style="font-size:14px;vertical-align:-2px;margin-right:5px"></i>全データを削除する
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ANALYTICS SCREEN ===== -->
+<div class="screen" id="sc-analytics">
+  <div class="sub-header">
+    <div class="sub-header-top">
+      <span class="sub-title"><i class="ti ti-chart-bar"></i>分析</span>
+      <div style="display:flex;gap:6px;" id="analytics-period-btns">
+        <span class="fchip active" data-p="7" onclick="setAnalyticsPeriod(this)">7日</span>
+        <span class="fchip" data-p="30" onclick="setAnalyticsPeriod(this)">30日</span>
+        <span class="fchip" data-p="90" onclick="setAnalyticsPeriod(this)">90日</span>
+      </div>
+    </div>
+  </div>
+  <div class="content" id="analytics-content" style="padding-top:10px;"></div>
+</div>
+
+<!-- ===== CALENDAR SCREEN ===== -->
+<div class="screen" id="sc-calendar">
+  <div class="sub-header">
+    <div class="sub-header-top">
+      <button style="background:var(--bg4);border:1px solid var(--border2);border-radius:8px;padding:5px 10px;color:var(--text2);cursor:pointer;font-size:16px;" onclick="calNav(-1)">‹</button>
+      <span class="sub-title" id="cal-title" style="font-size:16px;"></span>
+      <button style="background:var(--bg4);border:1px solid var(--border2);border-radius:8px;padding:5px 10px;color:var(--text2);cursor:pointer;font-size:16px;" onclick="calNav(1)">›</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-top:8px;">
+      <span style="font-size:10px;color:var(--red);padding:3px 0;">日</span>
+      <span style="font-size:10px;color:var(--text3);padding:3px 0;">月</span>
+      <span style="font-size:10px;color:var(--text3);padding:3px 0;">火</span>
+      <span style="font-size:10px;color:var(--text3);padding:3px 0;">水</span>
+      <span style="font-size:10px;color:var(--text3);padding:3px 0;">木</span>
+      <span style="font-size:10px;color:var(--text3);padding:3px 0;">金</span>
+      <span style="font-size:10px;color:var(--cyan);padding:3px 0;">土</span>
+    </div>
+  </div>
+  <div style="padding:10px 12px;display:flex;flex-direction:column;gap:10px;">
+    <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;"></div>
+    <div id="cal-detail" style="display:none;"></div>
+    <div class="card" style="margin-top:0;">
+      <div class="card-title"><i class="ti ti-calendar-stats"></i>月間サマリー</div>
+      <div id="cal-summary" style="display:flex;flex-direction:column;gap:6px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="nav-item active" data-sc="home" onclick="switchScreen('home',this)"><i class="ti ti-home"></i><span>ホーム</span></div>
+  <div class="nav-item" data-sc="list" onclick="switchScreen('list',this)"><i class="ti ti-list"></i><span>売上一覧</span></div>
+  <div class="nav-item" data-sc="analytics" onclick="switchScreen('analytics',this)"><i class="ti ti-chart-bar"></i><span>分析</span></div>
+  <div class="nav-item" data-sc="calendar" onclick="switchScreen('calendar',this)"><i class="ti ti-calendar"></i><span>カレンダー</span></div>
+  <div class="nav-item" data-sc="settings" onclick="switchScreen('settings',this)"><i class="ti ti-settings"></i><span>設定</span></div>
+</div>
+
+</div><!-- end app -->
+
+<!-- EDIT MODAL -->
+<div class="modal-bg" id="edit-modal">
+  <div class="modal">
+    <div class="modal-title">売上を編集 <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button></div>
+    <input type="hidden" id="e-id">
+    <div class="modal-grid">
+      <div class="modal-field"><label>運賃</label><input type="number" id="e-fare" min="0"></div>
+      <div class="modal-field"><label>高速代</label><input type="number" id="e-hw" min="0"></div>
+      <div class="modal-field"><label>迎車料金</label><input type="number" id="e-pk" min="0"></div>
+      <div class="modal-field"><label>チップ</label><input type="number" id="e-tip" min="0"></div>
+    </div>
+    <div class="sec-label">乗車区分</div>
+    <div class="tag-group" id="e-cat">
+      <span class="tag" data-val="流し" onclick="selectTag(this,'e-cat')">流し</span>
+      <span class="tag" data-val="待機" onclick="selectTag(this,'e-cat')">待機</span>
+      <span class="tag" data-val="アプリ" onclick="selectTag(this,'e-cat')">アプリ</span>
+      <span class="tag" data-val="予約" onclick="selectTag(this,'e-cat')">予約</span>
+      <span class="tag" data-val="無線" onclick="selectTag(this,'e-cat')">無線</span>
+    </div>
+    <div class="sec-label">支払方法</div>
+    <div class="tag-group" id="e-pay">
+      <span class="tag" data-val="現金" onclick="selectTag(this,'e-pay')">現金</span>
+      <span class="tag" data-val="クレカ" onclick="selectTag(this,'e-pay')">クレカ</span>
+      <span class="tag" data-val="アプリ決済" onclick="selectTag(this,'e-pay')">アプリ決済</span>
+      <span class="tag" data-val="タクチケ" onclick="selectTag(this,'e-pay')">タクチケ</span>
+      <span class="tag" data-val="電子マネー" onclick="selectTag(this,'e-pay')">電子マネー</span>
+    </div>
+    <div class="sec-label">メモ</div>
+    <input class="memo-in" id="e-memo" type="text" placeholder="メモ" style="width:100%;margin-bottom:4px;">
+    <button class="modal-save" onclick="updateSale()">変更を保存する</button>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM -->
+<div class="confirm-bg" id="del-modal">
+  <div class="confirm-box">
+    <div class="confirm-icon">🗑️</div>
+    <div class="confirm-title">削除しますか？</div>
+    <div class="confirm-sub" id="del-sub">この売上データを削除します。<br>元に戻すことはできません。</div>
+    <div class="confirm-btns">
+      <button class="confirm-btn" onclick="closeConfirm()">キャンセル</button>
+      <button class="confirm-btn danger" onclick="confirmDelete()">削除する</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLEAR ALL CONFIRM -->
+<div class="confirm-bg" id="clear-modal">
+  <div class="confirm-box">
+    <div class="confirm-icon">⚠️</div>
+    <div class="confirm-title">全データを削除</div>
+    <div class="confirm-sub">すべての売上データを削除します。<br>この操作は取り消せません。</div>
+    <div class="confirm-btns">
+      <button class="confirm-btn" onclick="document.getElementById('clear-modal').classList.remove('open')">キャンセル</button>
+      <button class="confirm-btn danger" onclick="clearAllData()">削除する</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== CONSTANTS =====
+const SK = 'taxi_v3_sales';
+const SK_SETTINGS = 'taxi_v3_settings';
+const PIE_COLORS = {流し:'#00e676',待機:'#f5a623',アプリ:'#00d4ff',予約:'#b388ff',無線:'#ff4757'};
+const PAY_COLORS = {現金:'#00e676',クレカ:'#00d4ff',アプリ決済:'#f5a623',タクチケ:'#b388ff',電子マネー:'#ff4757'};
+
+// ===== STATE =====
+let sales = [];
+let settings = {daily:45000,monthly:1200000,days:8,closeDay:20,startTime:'15:10'};
+let deleteId = null;
+let currentFilter = 'all';
+
+function loadData(){
+  try{ sales = JSON.parse(localStorage.getItem(SK)||'[]'); }catch(e){ sales=[]; }
+  try{ const s=JSON.parse(localStorage.getItem(SK_SETTINGS)); if(s) settings={...settings,...s}; }catch(e){}
+}
+function saveData(){ localStorage.setItem(SK, JSON.stringify(sales)); }
+function saveCfg(){ localStorage.setItem(SK_SETTINGS, JSON.stringify(settings)); }
+
+// ===== UTILS =====
+const fmt = n => '¥'+Math.round(n).toLocaleString();
+const todayStr = () => { const n=new Date(); return n.getFullYear()+'/'+pad(n.getMonth()+1)+'/'+pad(n.getDate()); };
+const timeStr = () => { const n=new Date(); return pad(n.getHours())+':'+pad(n.getMinutes()); };
+const pad = n => String(n).padStart(2,'0');
+
+function showToast(msg, type='ok'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show '+type;
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.className='toast',2400);
+}
+
+function noop(){}
+
+// ===== GPS =====
+let currentPos = null;
+let gpsWatchId = null;
+
+function startGPS(){
+  if(!navigator.geolocation){ showToast('位置情報未対応のブラウザです','ng'); return; }
+  document.getElementById('gps-status').textContent = '接続中...';
+  gpsWatchId = navigator.geolocation.watchPosition(onGPSSuccess, onGPSError, {
+    enableHighAccuracy:true, maximumAge:10000, timeout:15000
+  });
+}
+
+function onGPSSuccess(pos){
+  currentPos = {lat: pos.coords.latitude, lng: pos.coords.longitude, acc: Math.round(pos.coords.accuracy), speed: pos.coords.speed};
+  const spd = pos.coords.speed != null ? Math.round(pos.coords.speed * 3.6) : 0;
+  document.getElementById('gps-status').textContent = 'LIVE';
+  document.getElementById('gps-status').style.color = 'var(--green)';
+  reverseGeocode(currentPos.lat, currentPos.lng, spd, currentPos.acc);
+}
+
+function onGPSError(err){
+  const msgs = {1:'位置情報の許可が必要です',2:'位置情報を取得できません',3:'タイムアウトしました'};
+  document.getElementById('gps-status').textContent = 'エラー';
+  document.getElementById('gps-status').style.color = 'var(--red)';
+  document.getElementById('gps-body').innerHTML = `<div class="gps-permission">
+    <div style="font-size:20px;margin-bottom:6px;">⚠️</div>
+    <div>${msgs[err.code]||'不明なエラー'}</div>
+    <button onclick="startGPS()">再試行する</button>
+  </div>`;
+}
+
+function reverseGeocode(lat, lng, spd, acc){
+  const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=ja`;
+  fetch(url, {headers:{'Accept-Language':'ja'}})
+    .then(r=>r.json())
+    .then(d=>{
+      const addr = d.address;
+      const parts = [addr.city||addr.town||addr.village, addr.suburb||addr.neighbourhood||addr.quarter, addr.road].filter(Boolean);
+      const addrStr = parts.join(' ') || `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+      renderGPSCard(lat, lng, spd, acc, addrStr);
+    })
+    .catch(()=>{
+      renderGPSCard(lat, lng, spd, acc, `${lat.toFixed(5)}, ${lng.toFixed(5)}`);
+    });
+}
+
+function renderGPSCard(lat, lng, spd, acc, addr){
+  document.getElementById('gps-body').innerHTML = `
+    <div class="gps-addr"><i class="ti ti-map-pin" style="color:var(--cyan);margin-right:4px;font-size:12px;vertical-align:-1px"></i>${addr}</div>
+    <div class="gps-grid">
+      <div class="gps-item">
+        <div class="gps-item-label">緯度</div>
+        <div class="gps-item-val">${lat.toFixed(5)}</div>
+      </div>
+      <div class="gps-item">
+        <div class="gps-item-label">経度</div>
+        <div class="gps-item-val">${lng.toFixed(5)}</div>
+      </div>
+      <div class="gps-item">
+        <div class="gps-item-label">速度</div>
+        <div class="gps-item-val speed">${spd} km/h</div>
+      </div>
+      <div class="gps-item">
+        <div class="gps-item-label">精度</div>
+        <div class="gps-item-val">±${acc}m</div>
+      </div>
+    </div>
+    <button class="gps-map-btn" onclick="openMap(${lat},${lng})">
+      <i class="ti ti-map-2" style="font-size:14px"></i>Google Mapsで開く
+    </button>
+  `;
+}
+
+function openMap(lat, lng){
+  window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+}
+
+// ===== TIME =====
+function tick(){
+  const n=new Date();
+  const days=['日','月','火','水','木','金','土'];
+  document.getElementById('dt').textContent=
+    n.getFullYear()+'/'+pad(n.getMonth()+1)+'/'+pad(n.getDate())+
+    ' ('+days[n.getDay()]+') '+pad(n.getHours())+':'+pad(n.getMinutes())+'  🌙 20°C';
+  const [sh,sm]=settings.startTime.split(':').map(Number);
+  const start=new Date(n); start.setHours(sh,sm,0,0);
+  const diff=Math.max(0,n-start);
+  const h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000);
+  const el=document.getElementById('elapsed'); if(el) el.textContent=h+'時間'+m+'分';
+}
+setInterval(tick,1000); tick();
+
+// ===== TAG SELECT =====
+function selectTag(el,gid){
+  document.querySelectorAll('#'+gid+' .tag').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+function getTag(gid){
+  const a=document.querySelector('#'+gid+' .tag.active');
+  return a?a.dataset.val:'';
+}
+
+// ===== SAVE SALE =====
+function saveSale(){
+  const fare=parseInt(document.getElementById('i-fare').value)||0;
+  const hw=parseInt(document.getElementById('i-hw').value)||0;
+  const pk=parseInt(document.getElementById('i-pk').value)||0;
+  const tip=parseInt(document.getElementById('i-tip').value)||0;
+  const total=fare+hw+pk+tip;
+  if(total<=0){ showToast('金額を入力してください','ng'); return; }
+  const r={
+    id:Date.now(), date:todayStr(), time:timeStr(),
+    fare,highway:hw,pickup:pk,tip,total,
+    category:getTag('cat-tags')||'アプリ',
+    payment:getTag('pay-tags')||'クレカ',
+    memo:document.getElementById('i-memo').value,
+    lat: currentPos ? currentPos.lat : null,
+    lng: currentPos ? currentPos.lng : null,
+    addr: currentPos ? (document.querySelector('.gps-addr')?.textContent?.replace(/^./, '') || null) : null
+  };
+  sales.unshift(r); saveData();
+  document.getElementById('i-fare').value=0;
+  document.getElementById('i-hw').value=0;
+  document.getElementById('i-pk').value=0;
+  document.getElementById('i-tip').value=0;
+  document.getElementById('i-memo').value='';
+  updateStats(); renderList();
+  showToast('✓ 保存しました '+fmt(total));
+}
+
+// ===== RIDE =====
+function recordRide(t){
+  showToast(t==='on'?'🚕 乗車地点を記録':'🏁 降車地点を記録','info');
+  renderMapDots();
+}
+
+// ===== STATS =====
+function updateStats(){
+  const today=todayStr();
+  const td=sales.filter(s=>s.date===today);
+  const tTot=td.reduce((a,s)=>a+s.total,0);
+  const goal=settings.daily;
+  const pct=Math.min(100,Math.round(tTot/goal*100));
+  const circ=226.2;
+
+  // hero
+  document.getElementById('h-goal').textContent=fmt(goal);
+  document.getElementById('h-cur').textContent=fmt(tTot);
+  document.getElementById('h-rem').textContent='残り '+fmt(Math.max(0,goal-tTot));
+  document.getElementById('h-pct').textContent=pct+'%';
+  document.getElementById('h-bar').style.width=pct+'%';
+  document.getElementById('ring-circle').setAttribute('stroke-dasharray',(circ*pct/100)+' '+(circ*(1-pct/100)));
+
+  // required daily
+  const mTot=sales.reduce((a,s)=>a+s.total,0);
+  const mRem=Math.max(0,settings.monthly-mTot);
+  const req=settings.days>0?Math.round(mRem/settings.days):0;
+  document.getElementById('h-note').textContent='必要日額 '+fmt(req);
+
+  // monthly
+  const mPct=Math.min(100,Math.round(mTot/settings.monthly*100));
+  document.getElementById('m-goal-d').textContent=fmt(settings.monthly);
+  document.getElementById('m-cur').textContent=fmt(mTot);
+  document.getElementById('m-rem').textContent=fmt(Math.max(0,settings.monthly-mTot));
+  document.getElementById('m-bar').style.width=mPct+'%';
+  document.getElementById('m-pct').textContent=mPct+'%';
+  document.getElementById('m-days').textContent=settings.days;
+
+  // status
+  document.getElementById('st-cnt').textContent=td.length+'回';
+  const avg=td.length?Math.round(tTot/td.length):0;
+  document.getElementById('st-avg').textContent=fmt(avg);
+  document.getElementById('st-rate').textContent=td.length?'92.3%':'--';
+
+  // summary
+  document.getElementById('s-tot').textContent=fmt(tTot);
+  document.getElementById('s-cnt').textContent=td.length+'回';
+  document.getElementById('s-avg').textContent=fmt(avg);
+  document.getElementById('s-max').textContent=fmt(td.length?Math.max(...td.map(s=>s.total)):0);
+
+  renderPie(td);
+  renderPayBd(td);
+  renderMapDots();
+}
+
+// ===== PIE =====
+function renderPie(data){
+  const svg=document.getElementById('pie-svg');
+  const leg=document.getElementById('pie-leg');
+  if(!data.length){
+    svg.innerHTML='<circle cx="36" cy="36" r="30" fill="#1a2235"/><text x="36" y="40" text-anchor="middle" fill="#4a6280" font-size="9">なし</text>';
+    leg.innerHTML='<div style="font-size:10px;color:var(--text3)">データなし</div>';
+    return;
+  }
+  const counts={};
+  data.forEach(s=>counts[s.category]=(counts[s.category]||0)+s.total);
+  const total=Object.values(counts).reduce((a,b)=>a+b,0);
+  let html='<circle cx="36" cy="36" r="30" fill="#0d1220"/>';
+  let legHtml='';
+  let offset=0;
+  const r=30,cx=36,cy=36,circ=2*Math.PI*r;
+  Object.entries(counts).sort((a,b)=>b[1]-a[1]).forEach(([cat,val])=>{
+    const pct=val/total;
+    const color=PIE_COLORS[cat]||'#8ba3c7';
+    html+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${color}" stroke-width="14"
+      stroke-dasharray="${pct*circ} ${circ*(1-pct)}"
+      style="transform-origin:${cx}px ${cy}px;transform:rotate(${-90+offset*360}deg)"
+      stroke-linecap="butt"/>`;
+    offset+=pct;
+    legHtml+=`<div class="leg-row"><span class="leg-dot" style="background:${color}"></span><span class="leg-name">${cat}</span><span class="leg-pct">${Math.round(pct*100)}%</span></div>`;
+  });
+  svg.innerHTML=html;
+  leg.innerHTML=legHtml;
+}
+
+// ===== PAY BD =====
+function renderPayBd(data){
+  const el=document.getElementById('pay-bd');
+  if(!data.length){ el.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;padding:8px 0;">データなし</div>'; return; }
+  const counts={};
+  data.forEach(s=>counts[s.payment]=(counts[s.payment]||0)+s.total);
+  const total=Object.values(counts).reduce((a,b)=>a+b,0);
+  el.innerHTML=Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([pay,val])=>{
+    const pct=Math.round(val/total*100);
+    const color=PAY_COLORS[pay]||'#8ba3c7';
+    return `<div class="pay-row">
+      <span class="pay-name">${pay}</span>
+      <div class="pay-bar-bg"><div class="pay-bar" style="width:${pct}%;background:${color}"></div></div>
+      <span class="pay-val">${fmt(val)}</span>
+      <span class="pay-pct">${pct}%</span>
+    </div>`;
+  }).join('');
+}
+
+// ===== MAP =====
+function renderMapDots(){
+  const el=document.getElementById('mapdots'); if(!el)return;
+  const base=[
+    {x:28,y:22,t:1},{x:52,y:38,t:0},{x:78,y:28,t:1},{x:98,y:48,t:0},
+    {x:38,y:62,t:1},{x:62,y:72,t:0},{x:88,y:18,t:1},{x:18,y:78,t:0},
+    {x:112,y:62,t:1},{x:128,y:35,t:0},
+  ];
+  const today=todayStr();
+  const extra=sales.filter(s=>s.date===today).slice(0,6).flatMap((s,i)=>[
+    {x:15+((i*41)%120),y:12+((i*57)%90),t:1},
+    {x:22+((i*41)%120),y:20+((i*57)%90),t:0}
+  ]);
+  el.innerHTML=[...base,...extra].map(d=>
+    `<div class="map-dot" style="left:${d.x/150*100}%;top:${d.y/115*100}%;background:${d.t?'var(--green)':'var(--red)'};box-shadow:0 0 6px ${d.t?'rgba(0,230,118,.6)':'rgba(255,71,87,.6)'};border:1.5px solid ${d.t?'rgba(0,0,0,.5)':'rgba(255,255,255,.3)'}"></div>`
+  ).join('');
+}
+
+// ===== SCREEN =====
+function switchScreen(name,el){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('sc-'+name).classList.add('active');
+  el.classList.add('active');
+  if(name==='list') renderList();
+  if(name==='settings') loadSettingsUI();
+  if(name==='analytics') renderAnalytics();
+  if(name==='calendar') renderCalendar();
+}
+
+// ===== ANALYTICS =====
+let analyticsDays = 7;
+function setAnalyticsPeriod(el){
+  document.querySelectorAll('#analytics-period-btns .fchip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  analyticsDays = parseInt(el.dataset.p);
+  renderAnalytics();
+}
+
+function renderAnalytics(){
+  const now = new Date();
+  const cutoff = new Date(now); cutoff.setDate(cutoff.getDate() - analyticsDays);
+  const cutStr = cutoff.getFullYear()+'/'+pad(cutoff.getMonth()+1)+'/'+pad(cutoff.getDate());
+  const data = sales.filter(s => s.date >= cutStr);
+  const total = data.reduce((a,s)=>a+s.total,0);
+  const avg = data.length ? Math.round(total/data.length) : 0;
+  const max = data.length ? Math.max(...data.map(s=>s.total)) : 0;
+  const days = [...new Set(data.map(s=>s.date))].length;
+  const dailyAvg = days ? Math.round(total/days) : 0;
+
+  // daily chart data
+  const dailyMap = {};
+  for(let i=analyticsDays-1;i>=0;i--){
+    const d = new Date(now); d.setDate(d.getDate()-i);
+    const key = d.getFullYear()+'/'+pad(d.getMonth()+1)+'/'+pad(d.getDate());
+    dailyMap[key] = 0;
+  }
+  data.forEach(s=>{ if(dailyMap[s.date]!==undefined) dailyMap[s.date]+=s.total; });
+  const dailyVals = Object.values(dailyMap);
+  const maxDaily = Math.max(...dailyVals, 1);
+  const dailyKeys = Object.keys(dailyMap);
+
+  // category breakdown
+  const catMap = {};
+  data.forEach(s=>catMap[s.category]=(catMap[s.category]||0)+s.total);
+  const payMap = {};
+  data.forEach(s=>payMap[s.payment]=(payMap[s.payment]||0)+s.total);
+
+  const el = document.getElementById('analytics-content');
+  el.innerHTML = `
+    <!-- KPI row -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:0;">
+      <div class="card" style="text-align:center;padding:12px 8px;">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;">総売上</div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--amber);text-shadow:0 0 12px var(--amber-glow);">${fmt(total)}</div>
+      </div>
+      <div class="card" style="text-align:center;padding:12px 8px;">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;">乗車回数</div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--cyan);">${data.length}<span style="font-size:13px;">回</span></div>
+      </div>
+      <div class="card" style="text-align:center;padding:12px 8px;">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;">平均単価</div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--green);">${fmt(avg)}</div>
+      </div>
+      <div class="card" style="text-align:center;padding:12px 8px;">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;">日平均売上</div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--purple);">${fmt(dailyAvg)}</div>
+      </div>
+    </div>
+
+    <!-- Daily bar chart -->
+    <div class="card">
+      <div class="card-title"><i class="ti ti-chart-bar"></i>日別売上</div>
+      <div style="display:flex;align-items:flex-end;gap:${analyticsDays<=7?'6':'3'}px;height:100px;margin-bottom:6px;">
+        ${dailyVals.map((v,i)=>{
+          const h = Math.max(3, Math.round(v/maxDaily*96));
+          const isToday = dailyKeys[i]===todayStr();
+          const color = isToday ? 'var(--amber)' : v>0 ? 'var(--cyan)' : 'var(--bg4)';
+          const glow = isToday ? 'var(--amber-glow)' : v>0 ? 'var(--cyan-glow)' : 'none';
+          return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+            <div style="font-size:8px;color:var(--text3);height:14px;display:flex;align-items:flex-end;">${v>0?Math.round(v/1000)+'k':''}</div>
+            <div style="width:100%;height:${h}px;background:${color};border-radius:3px 3px 0 0;box-shadow:0 0 8px ${glow};transition:height .6s ease;"></div>
+            ${analyticsDays<=30?`<div style="font-size:7px;color:${isToday?'var(--amber)':'var(--text3)'};">${dailyKeys[i].slice(8)}</div>`:''}
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);">
+        <span>${dailyKeys[0]?.slice(5)}</span><span>${dailyKeys[dailyKeys.length-1]?.slice(5)}</span>
+      </div>
+    </div>
+
+    <!-- Category + Payment -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div class="card">
+        <div class="card-title"><i class="ti ti-car"></i>乗車区分</div>
+        ${Object.entries(catMap).sort((a,b)=>b[1]-a[1]).map(([k,v])=>{
+          const pct=Math.round(v/total*100);
+          const c=PIE_COLORS[k]||'#8ba3c7';
+          return `<div style="margin-bottom:6px;">
+            <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px;">
+              <span style="color:var(--text2);">${k}</span>
+              <span style="color:${c};font-family:'Rajdhani',sans-serif;font-weight:700;">${pct}%</span>
+            </div>
+            <div class="prog-bar" style="margin:0;"><div class="prog-fill" style="width:${pct}%;background:${c};"></div></div>
+          </div>`;
+        }).join('') || '<div style="font-size:11px;color:var(--text3);">データなし</div>'}
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-credit-card"></i>支払方法</div>
+        ${Object.entries(payMap).sort((a,b)=>b[1]-a[1]).map(([k,v])=>{
+          const pct=Math.round(v/total*100);
+          const c=PAY_COLORS[k]||'#8ba3c7';
+          return `<div style="margin-bottom:6px;">
+            <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px;">
+              <span style="color:var(--text2);">${k}</span>
+              <span style="color:${c};font-family:'Rajdhani',sans-serif;font-weight:700;">${pct}%</span>
+            </div>
+            <div class="prog-bar" style="margin:0;"><div class="prog-fill" style="width:${pct}%;background:${c};"></div></div>
+          </div>`;
+        }).join('') || '<div style="font-size:11px;color:var(--text3);">データなし</div>'}
+      </div>
+    </div>
+
+    <!-- Top fares -->
+    <div class="card">
+      <div class="card-title"><i class="ti ti-trophy"></i>高額ランキング TOP5</div>
+      ${data.length===0 ? '<div style="font-size:11px;color:var(--text3);text-align:center;padding:8px;">データなし</div>' :
+        [...data].sort((a,b)=>b.total-a.total).slice(0,5).map((s,i)=>{
+          const medals=['🥇','🥈','🥉','4️⃣','5️⃣'];
+          return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);">
+            <span style="font-size:16px;width:22px;">${medals[i]}</span>
+            <div style="flex:1;">
+              <div style="font-size:11px;color:var(--text3);">${s.date} ${s.time} · ${s.category}</div>
+            </div>
+            <div style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--amber);">${fmt(s.total)}</div>
+          </div>`;
+        }).join('')
+      }
+    </div>
+
+    <!-- Time heatmap (hour distribution) -->
+    <div class="card">
+      <div class="card-title"><i class="ti ti-clock"></i>時間帯別乗車数</div>
+      ${renderHourHeatmap(data)}
+    </div>
+  `;
+}
+
+function renderHourHeatmap(data){
+  const hours = Array(24).fill(0);
+  data.forEach(s=>{ const h=parseInt(s.time?.split(':')[0]||0); if(h>=0&&h<24) hours[h]++; });
+  const maxH = Math.max(...hours,1);
+  const timeLabels = ['0','','','','','5','','','','','10','','','','','15','','','','','20','','','23'];
+  return `<div style="display:grid;grid-template-columns:repeat(24,1fr);gap:2px;align-items:flex-end;height:50px;">
+    ${hours.map((v,i)=>{
+      const h=Math.max(3,Math.round(v/maxH*46));
+      const color = i>=6&&i<=9?'var(--amber)':i>=17&&i<=22?'var(--cyan)':'var(--bg4)';
+      return `<div title="${i}時: ${v}件" style="width:100%;height:${h}px;background:${v>0?color:'var(--bg4)'};border-radius:2px 2px 0 0;"></div>`;
+    }).join('')}
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(24,1fr);margin-top:2px;">
+    ${timeLabels.map(l=>`<div style="font-size:6px;color:var(--text3);text-align:center;">${l}</div>`).join('')}
+  </div>
+  <div style="display:flex;gap:10px;margin-top:6px;font-size:10px;color:var(--text3);">
+    <span><span style="display:inline-block;width:8px;height:8px;background:var(--amber);border-radius:2px;margin-right:3px;vertical-align:middle;"></span>朝ラッシュ</span>
+    <span><span style="display:inline-block;width:8px;height:8px;background:var(--cyan);border-radius:2px;margin-right:3px;vertical-align:middle;"></span>夜間</span>
+  </div>`;
+}
+
+// ===== CALENDAR =====
+let calYear, calMonth;
+function initCal(){ const n=new Date(); calYear=n.getFullYear(); calMonth=n.getMonth(); }
+function calNav(dir){ calMonth+=dir; if(calMonth>11){calMonth=0;calYear++;} if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
+
+function renderCalendar(){
+  if(calYear===undefined) initCal();
+  const monthNames=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  document.getElementById('cal-title').textContent = calYear+'年 '+monthNames[calMonth];
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const today = new Date();
+  const todayKey = todayStr();
+
+  // build daily totals for this month
+  const dailyTotals = {};
+  const prefix = calYear+'/'+pad(calMonth+1)+'/';
+  sales.filter(s=>s.date.startsWith(prefix)).forEach(s=>{
+    dailyTotals[s.date]=(dailyTotals[s.date]||0)+s.total;
+  });
+  const maxDay = Math.max(...Object.values(dailyTotals),1);
+
+  let cells = '';
+  for(let i=0;i<firstDay;i++) cells+=`<div></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const key = calYear+'/'+pad(calMonth+1)+'/'+pad(d);
+    const val = dailyTotals[key]||0;
+    const isToday = key===todayKey;
+    const hasSale = val>0;
+    const intensity = hasSale ? Math.max(0.15, val/maxDay) : 0;
+    const bg = hasSale ? `rgba(245,166,35,${intensity})` : 'var(--bg4)';
+    const border = isToday ? '1px solid var(--amber)' : '1px solid transparent';
+    const dow = (firstDay+d-1)%7;
+    const dayColor = isToday ? 'var(--amber)' : dow===0 ? 'var(--red)' : dow===6 ? 'var(--cyan)' : 'var(--text2)';
+    cells += `<div onclick="showCalDay('${key}')" style="
+      background:${bg};border:${border};border-radius:6px;
+      aspect-ratio:1;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;cursor:pointer;
+      transition:all .15s;padding:2px;
+    ">
+      <span style="font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;color:${dayColor};line-height:1;">${d}</span>
+      ${hasSale?`<span style="font-size:7px;color:var(--amber);font-family:'Rajdhani',sans-serif;">${Math.round(val/1000)}k</span>`:''}
+    </div>`;
+  }
+  document.getElementById('cal-grid').innerHTML = cells;
+  document.getElementById('cal-detail').style.display='none';
+
+  // monthly summary
+  const mSales = sales.filter(s=>s.date.startsWith(prefix));
+  const mTotal = mSales.reduce((a,s)=>a+s.total,0);
+  const mDays = Object.keys(dailyTotals).length;
+  const mAvg = mDays ? Math.round(mTotal/mDays) : 0;
+  const mGoal = settings.monthly;
+  const mPct = mGoal ? Math.min(100,Math.round(mTotal/mGoal*100)) : 0;
+  document.getElementById('cal-summary').innerHTML = `
+    <div class="stat-row"><span class="k">月間売上</span><span class="v" style="color:var(--amber);">${fmt(mTotal)}</span></div>
+    <div class="stat-row"><span class="k">乗車回数</span><span class="v">${mSales.length}回</span></div>
+    <div class="stat-row"><span class="k">稼働日数</span><span class="v">${mDays}日</span></div>
+    <div class="stat-row"><span class="k">日平均</span><span class="v">${fmt(mAvg)}</span></div>
+    <div class="stat-row"><span class="k">目標達成率</span><span class="v" style="color:var(--cyan);">${mPct}%</span></div>
+    <div class="prog-bar"><div class="prog-fill prog-cyan" style="width:${mPct}%"></div></div>
+  `;
+}
+
+function showCalDay(dateKey){
+  const daySales = sales.filter(s=>s.date===dateKey);
+  const detail = document.getElementById('cal-detail');
+  if(!daySales.length){ detail.style.display='none'; return; }
+  const total = daySales.reduce((a,s)=>a+s.total,0);
+  detail.style.display='block';
+  detail.innerHTML = `<div class="card" style="border:1px solid var(--amber-glow);">
+    <div class="card-title" style="color:var(--amber);"><i class="ti ti-calendar-event"></i>${dateKey} の売上</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <span style="font-size:12px;color:var(--text2);">${daySales.length}件</span>
+      <span style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--amber);">${fmt(total)}</span>
+    </div>
+    ${daySales.map(s=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-top:1px solid var(--border);font-size:12px;">
+      <span style="color:var(--text3);">${s.time}</span>
+      <span class="sbadge sbadge-cat">${s.category}</span>
+      <span style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--text);">${fmt(s.total)}</span>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ===== FILTER =====
+function setFilter(el){
+  document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  currentFilter=el.dataset.f;
+  renderList();
+}
+function filteredSales(){
+  if(currentFilter==='all') return sales;
+  if(currentFilter==='今日') return sales.filter(s=>s.date===todayStr());
+  return sales.filter(s=>s.category===currentFilter||s.payment===currentFilter);
+}
+
+// ===== RENDER LIST =====
+function renderList(){
+  const f=filteredSales();
+  const tot=f.reduce((a,s)=>a+s.total,0);
+  const avg=f.length?Math.round(tot/f.length):0;
+  document.getElementById('l-tot').textContent=fmt(tot);
+  document.getElementById('l-cnt').textContent=f.length+'件';
+  document.getElementById('l-avg').textContent=fmt(avg);
+  const el=document.getElementById('sale-list');
+  if(!f.length){
+    el.innerHTML=`<div class="empty-state"><i class="ti ti-database-off"></i><p>売上データがありません<br>ホームから売上を入力してください</p></div>`;
+    return;
+  }
+  el.innerHTML=f.map(s=>{
+    const catColor=PIE_COLORS[s.category]||'#8ba3c7';
+    return `<div class="sale-card" style="border-left-color:${catColor}" id="card-${s.id}">
+      <div class="sale-header">
+        <div>
+          <div class="sale-time">${s.date} ${s.time}</div>
+          <div class="sale-amount">${fmt(s.total)}</div>
+        </div>
+        <div class="sale-fare-detail">
+          運賃 ${fmt(s.fare)}<br>
+          ${s.highway?'高速 '+fmt(s.highway)+'<br>':''}
+          ${s.pickup?'迎車 '+fmt(s.pickup)+'<br>':''}
+          ${s.tip?'チップ '+fmt(s.tip):''}
+        </div>
+      </div>
+      <div class="sale-badges">
+        <span class="sbadge sbadge-cat">${s.category}</span>
+        <span class="sbadge sbadge-pay">${s.payment}</span>
+        ${s.memo?`<span class="sbadge sbadge-memo">${s.memo}</span>`:''}
+      </div>
+      ${s.addr||s.lat ? `<div class="sale-loc">
+        <i class="ti ti-map-pin"></i>
+        ${s.addr ? s.addr : (s.lat ? s.lat.toFixed(5)+', '+s.lng.toFixed(5) : '')}
+        ${s.lat ? `<a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank" style="color:var(--cyan);text-decoration:none;margin-left:4px;font-size:10px;">地図▶</a>` : ''}
+      </div>` : ''}
+      <div class="sale-acts">
+        <button class="sale-act" onclick="openEdit(${s.id})"><i class="ti ti-edit" style="font-size:13px"></i>編集</button>
+        <button class="sale-act del" onclick="openDelete(${s.id},${s.total})"><i class="ti ti-trash" style="font-size:13px"></i>削除</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== EDIT =====
+function openEdit(id){
+  const s=sales.find(x=>x.id===id); if(!s)return;
+  document.getElementById('e-id').value=id;
+  document.getElementById('e-fare').value=s.fare;
+  document.getElementById('e-hw').value=s.highway;
+  document.getElementById('e-pk').value=s.pickup;
+  document.getElementById('e-tip').value=s.tip;
+  document.getElementById('e-memo').value=s.memo||'';
+  ['e-cat','e-pay'].forEach(g=>document.querySelectorAll('#'+g+' .tag').forEach(t=>t.classList.remove('active')));
+  const ct=document.querySelector('#e-cat .tag[data-val="'+s.category+'"]');
+  const pt=document.querySelector('#e-pay .tag[data-val="'+s.payment+'"]');
+  if(ct)ct.classList.add('active');
+  if(pt)pt.classList.add('active');
+  document.getElementById('edit-modal').classList.add('open');
+}
+function closeModal(){ document.getElementById('edit-modal').classList.remove('open'); }
+function updateSale(){
+  const id=parseInt(document.getElementById('e-id').value);
+  const idx=sales.findIndex(x=>x.id===id); if(idx<0)return;
+  const fare=parseInt(document.getElementById('e-fare').value)||0;
+  const hw=parseInt(document.getElementById('e-hw').value)||0;
+  const pk=parseInt(document.getElementById('e-pk').value)||0;
+  const tip=parseInt(document.getElementById('e-tip').value)||0;
+  sales[idx]={...sales[idx],fare,highway:hw,pickup:pk,tip,total:fare+hw+pk+tip,
+    category:getTag('e-cat')||sales[idx].category,
+    payment:getTag('e-pay')||sales[idx].payment,
+    memo:document.getElementById('e-memo').value};
+  saveData(); closeModal(); renderList(); updateStats();
+  showToast('✓ 更新しました');
+}
+
+// ===== DELETE =====
+function openDelete(id,total){
+  deleteId=id;
+  document.getElementById('del-sub').textContent=fmt(total)+'の売上データを削除します。\n元に戻すことはできません。';
+  document.getElementById('del-modal').classList.add('open');
+}
+function closeConfirm(){ document.getElementById('del-modal').classList.remove('open'); deleteId=null; }
+function confirmDelete(){
+  if(!deleteId)return;
+  sales=sales.filter(s=>s.id!==deleteId);
+  saveData(); closeConfirm(); renderList(); updateStats();
+  showToast('削除しました','ng');
+}
+
+// ===== CLEAR ALL =====
+function openClearConfirm(){ document.getElementById('clear-modal').classList.add('open'); }
+function clearAllData(){
+  sales=[]; saveData();
+  document.getElementById('clear-modal').classList.remove('open');
+  renderList(); updateStats();
+  showToast('全データを削除しました','ng');
+}
+
+// ===== SETTINGS =====
+function loadSettingsUI(){
+  document.getElementById('set-daily').value=settings.daily;
+  document.getElementById('set-monthly').value=settings.monthly;
+  document.getElementById('set-days').value=settings.days;
+  document.getElementById('set-close').value=settings.closeDay;
+  document.getElementById('set-start').value=settings.startTime;
+}
+function saveSettings(){
+  settings.daily=parseInt(document.getElementById('set-daily').value)||45000;
+  settings.monthly=parseInt(document.getElementById('set-monthly').value)||1200000;
+  settings.days=parseInt(document.getElementById('set-days').value)||8;
+  settings.closeDay=parseInt(document.getElementById('set-close').value)||20;
+  settings.startTime=document.getElementById('set-start').value||'15:10';
+  saveCfg(); updateStats();
+  showToast('✓ 設定を保存しました');
+}
+
+// ===== CSV =====
+function exportCSV(){
+  const f=filteredSales();
+  if(!f.length){ showToast('データがありません','ng'); return; }
+  const h=['日付','時刻','合計','運賃','高速代','迎車料金','チップ','乗車区分','支払方法','メモ'];
+  const rows=f.map(s=>[s.date,s.time,s.total,s.fare,s.highway,s.pickup,s.tip,s.category,s.payment,s.memo||'']);
+  const csv=[h,...rows].map(r=>r.join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='taxi_sales_'+todayStr().replace(/\//g,'')+'.csv'; a.click();
+  showToast('CSVをダウンロードしました','info');
+}
+
+// ===== INIT =====
+loadData(); updateStats();
+if(navigator.geolocation) startGPS();
+</script>
+</body>
+</html>
