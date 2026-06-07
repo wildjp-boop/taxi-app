@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0A0E14">
+<title>ライブカメラ | taxi売上</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.11.0/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#0A0E14;--bg2:#0f1520;--bg3:#141d2e;--border:#1e2d45;
+  --text:#e8f0fe;--text2:#7a99c8;--text3:#3d5580;
+  --cyan:#00d4ff;--cyan-glow:rgba(0,212,255,0.2);
+  --red:#ff4757;--amber:#f5a623;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Hiragino Sans','Noto Sans JP',sans-serif;overflow-x:hidden;}
+
+.header{
+  background:rgba(10,14,20,0.98);
+  backdrop-filter:blur(20px);
+  padding:max(env(safe-area-inset-top),14px) 14px 12px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+  position:sticky;top:0;z-index:10;
+}
+.back-btn{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;width:36px;height:36px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text2);font-size:18px;cursor:pointer;
+  text-decoration:none;transition:all .2s;flex-shrink:0;
+}
+.back-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.header-title{
+  font-size:16px;font-weight:700;color:var(--cyan);
+  display:flex;align-items:center;gap:6px;
+  text-shadow:0 0 10px var(--cyan-glow);
+}
+
+.content{padding:10px 12px 30px;display:flex;flex-direction:column;gap:6px;}
+
+.section-label{
+  font-size:10px;color:var(--text3);
+  text-transform:uppercase;letter-spacing:1.5px;
+  font-weight:700;padding:8px 2px 4px;
+}
+
+.cam-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px;}
+
+.cam-thumb{
+  border-radius:10px;overflow:hidden;cursor:pointer;
+  border:1px solid var(--border);background:var(--bg2);
+  transition:border-color .2s,transform .15s;
+  position:relative;
+  text-decoration:none;display:block;
+}
+.cam-thumb:active{transform:scale(0.96);}
+.cam-thumb-img{
+  width:100%;aspect-ratio:16/9;object-fit:cover;
+  display:block;background:var(--bg3);
+}
+.cam-thumb-overlay{
+  position:absolute;top:0;left:0;right:0;
+  padding:5px 6px;
+  background:linear-gradient(to bottom,rgba(0,0,0,.65),transparent);
+}
+.live-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:9px;font-weight:700;color:#fff;
+  background:rgba(255,71,87,.9);border-radius:4px;padding:2px 6px;
+}
+.live-dot{
+  width:6px;height:6px;border-radius:50%;background:#fff;
+  animation:blink 1.2s infinite;flex-shrink:0;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+.cam-thumb-name{
+  font-size:12px;font-weight:700;color:var(--text);
+  padding:7px 8px;background:var(--bg2);
+  border-top:1px solid var(--border);
+  text-align:center;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a class="back-btn" onclick="window.close()" href="javascript:void(0)"><i class="ti ti-x"></i></a>
+  <div class="header-title"><i class="ti ti-video" style="font-size:18px"></i>ライブカメラ</div>
+</div>
+
+<div class="content">
+
+  <div class="section-label">📍 新大阪駅</div>
+  <div class="cam-grid">
+    <a class="cam-thumb" href="https://www.youtube.com/watch?v=l_KhuN2nooY" target="_blank">
+      <img class="cam-thumb-img" src="https://img.youtube.com/vi/l_KhuN2nooY/mqdefault.jpg" alt="新大阪待機場">
+      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
+      <div class="cam-thumb-name">新大阪待機場</div>
+    </a>
+    <a class="cam-thumb" href="https://www.youtube.com/watch?v=YRuBQ3136D0" target="_blank">
+      <img class="cam-thumb-img" src="https://img.youtube.com/vi/YRuBQ3136D0/mqdefault.jpg" alt="新大阪乗り場">
+      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
+      <div class="cam-thumb-name">新大阪乗り場</div>
+    </a>
+    <a class="cam-thumb" href="https://www.youtube.com/watch?v=vxRaY0mXBbU" target="_blank">
+      <img class="cam-thumb-img" src="https://img.youtube.com/vi/vxRaY0mXBbU/mqdefault.jpg" alt="新大阪待機列">
+      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
+      <div class="cam-thumb-name">新大阪待機列</div>
+    </a>
+    <a class="cam-thumb" href="https://www.youtube.com/watch?v=eHKFF2ly1vc" target="_blank">
+      <img class="cam-thumb-img" src="https://img.youtube.com/vi/eHKFF2ly1vc/mqdefault.jpg" alt="新御堂筋">
+      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
+      <div class="cam-thumb-name">新御堂筋</div>
+    </a>
+  </div>
+
+  <div class="section-label">📍 大阪市内</div>
+  <div class="cam-grid">
+    <a class="cam-thumb" href="https://www.youtube.com/watch?v=jDCCynfjX9I" target="_blank">
+      <img class="cam-thumb-img" src="https://img.youtube.com/vi/jDCCynfjX9I/mqdefault.jpg" alt="大阪駅桜橋口">
+      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
+      <div class="cam-thumb-name">大阪駅桜橋口</div>
+    </a>
+    <a class="cam-thumb" href="https://www.youtube.com/watch?v=aVAO2wSUsPo" target="_blank">
+      <img class="cam-thumb-img" src="https://img.youtube.com/vi/aVAO2wSUsPo/mqdefault.jpg" alt="新橋交差点">
+      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
+      <div class="cam-thumb-name">新橋交差点</div>
+    </a>
+  </div>
+
+  <div class="section-label">📍 関西国際空港</div>
+  <div class="cam-grid">
+    <a class="cam-thumb" href="https://www.youtube.com/watch?v=QlNRsUPGMaY" target="_blank">
+      <img class="cam-thumb-img" src="https://img.youtube.com/vi/QlNRsUPGMaY/mqdefault.jpg" alt="関空T1">
+      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
+      <div class="cam-thumb-name">関空 T1</div>
+    </a>
+    <a class="cam-thumb" href="https://www.youtube.com/watch?v=v4bVUjsFqAQ" target="_blank">
+      <img class="cam-thumb-img" src="https://img.youtube.com/vi/v4bVUjsFqAQ/mqdefault.jpg" alt="関空T2">
+      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
+      <div class="cam-thumb-name">関空 T2</div>
+    </a>
+  </div>
+
+</div>
+</body>
+</html>
