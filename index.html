@@ -587,10 +587,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
       <span class="qtag" data-val="電子マネー" onclick="selTag(this,'pay-tags')">電子マネー</span>
     </div>
     <div class="sec-label">メモ（任意）</div>
-    <div class="save-bar">
+    <div class="memo-row">
       <input class="memo-in" id="i-memo" type="text" placeholder="メモ...">
       <button class="save-btn" onclick="saveSale()">保存</button>
     </div>
+    <!-- 乗降位置ステータス -->
+    <div id="ride-status" style="margin-top:8px;display:flex;flex-direction:column;gap:4px;"></div>
   </div>
 
 </div>
@@ -998,7 +1000,8 @@ function saveSale(){
     offAddr:rideOffPos?rideOffPos.addr:null,
   };
   sales.unshift(r);save();
-  rideOnPos=null; rideOffPos=null; // リセット
+  rideOnPos=null; rideOffPos=null;
+  updateRideStatus();
   document.getElementById('i-fare').value=0;
   document.getElementById('i-hw').value=0;
   document.getElementById('i-pk').value=0;
@@ -1012,12 +1015,53 @@ function saveSale(){
 let rideOnPos = null;   // 乗車位置
 let rideOffPos = null;  // 降車位置
 
+function updateRideStatus(){
+  const el = document.getElementById('ride-status');
+  if(!el) return;
+  let html = '';
+  if(rideOnPos){
+    html += `<div style="font-size:11px;display:flex;align-items:center;gap:4px;padding:5px 8px;background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.25);border-radius:7px;">
+      <i class="ti ti-map-pin" style="color:var(--green);font-size:12px"></i>
+      <span style="color:var(--green);font-weight:700;">乗車</span>
+      <span style="color:var(--text2);flex:1;">${rideOnPos.addr||'位置取得済み'}</span>
+      <span style="color:var(--text3);cursor:pointer;" onclick="rideOnPos=null;updateRideStatus()">✕</span>
+    </div>`;
+  } else {
+    html += `<div style="font-size:11px;display:flex;align-items:center;gap:4px;padding:5px 8px;background:var(--bg4);border:1px solid var(--border);border-radius:7px;opacity:.5;">
+      <i class="ti ti-map-pin" style="color:var(--text3);font-size:12px"></i>
+      <span style="color:var(--text3);">乗車位置 未記録</span>
+    </div>`;
+  }
+  if(rideOffPos){
+    html += `<div style="font-size:11px;display:flex;align-items:center;gap:4px;padding:5px 8px;background:rgba(255,71,87,0.08);border:1px solid rgba(255,71,87,0.25);border-radius:7px;">
+      <i class="ti ti-map-pin" style="color:var(--red);font-size:12px"></i>
+      <span style="color:var(--red);font-weight:700;">降車</span>
+      <span style="color:var(--text2);flex:1;">${rideOffPos.addr||'位置取得済み'}</span>
+      <span style="color:var(--text3);cursor:pointer;" onclick="rideOffPos=null;updateRideStatus()">✕</span>
+    </div>`;
+  } else {
+    html += `<div style="font-size:11px;display:flex;align-items:center;gap:4px;padding:5px 8px;background:var(--bg4);border:1px solid var(--border);border-radius:7px;opacity:.5;">
+      <i class="ti ti-map-pin" style="color:var(--text3);font-size:12px"></i>
+      <span style="color:var(--text3);">降車位置 未記録</span>
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
 function recordRide(t){
-  // GPS取得
+  // 取得中表示
+  if(t==='on'){
+    rideOnPos = null;
+    showToast('🚕 乗車位置を取得中...','info');
+  } else {
+    rideOffPos = null;
+    showToast('🏁 降車位置を取得中...','info');
+  }
+  updateRideStatus();
+
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(pos=>{
       const lat=pos.coords.latitude, lng=pos.coords.longitude;
-      // 逆ジオコーディング
       fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=ja&zoom=18`,
         {headers:{'User-Agent':'taxi-app'}})
         .then(r=>r.json()).then(rd=>{
@@ -1026,22 +1070,24 @@ function recordRide(t){
           const loc=chome||(rd.display_name||'').split(',').slice(0,2).map(s=>s.trim()).join(' ')||`${lat.toFixed(4)},${lng.toFixed(4)}`;
           if(t==='on'){
             rideOnPos={lat,lng,addr:loc};
-            showToast('🚕 乗車位置を記録：'+loc,'info');
+            showToast('🚕 乗車：'+loc,'info');
           } else {
             rideOffPos={lat,lng,addr:loc};
-            showToast('🏁 降車位置を記録：'+loc,'info');
+            showToast('🏁 降車：'+loc,'info');
           }
+          updateRideStatus();
         }).catch(()=>{
-          if(t==='on') rideOnPos={lat,lng,addr:`${lat.toFixed(4)},${lng.toFixed(4)}`};
-          else rideOffPos={lat,lng,addr:`${lat.toFixed(4)},${lng.toFixed(4)}`};
+          const loc=`${lat.toFixed(4)},${lng.toFixed(4)}`;
+          if(t==='on') rideOnPos={lat,lng,addr:loc};
+          else rideOffPos={lat,lng,addr:loc};
+          updateRideStatus();
           showToast(t==='on'?'🚕 乗車位置を記録しました':'🏁 降車位置を記録しました','info');
         });
     }, ()=>{
-      showToast(t==='on'?'🚕 乗車ボタンを押しました（GPS取得失敗）':'🏁 降車ボタンを押しました（GPS取得失敗）','info');
+      showToast('GPS取得失敗。再度ボタンを押してください','ng');
     },{enableHighAccuracy:true,timeout:8000,maximumAge:0});
-  } else {
-    showToast(t==='on'?'🚕 乗車を記録しました':'🏁 降車を記録しました','info');
   }
+
   // 降車時は運賃入力にフォーカス
   if(t==='off'){
     const input=document.getElementById('i-fare');
