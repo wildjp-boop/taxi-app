@@ -988,11 +988,17 @@ function saveSale(){
     category:getTag('cat-tags')||'アプリ',
     payment:getTag('pay-tags')||'クレカ',
     memo:document.getElementById('i-memo').value,
-    lat:currentPos?currentPos.lat:null,
-    lng:currentPos?currentPos.lng:null,
-    addr:currentPos?currentPos.addr:null
+    // 乗車位置
+    onLat:rideOnPos?rideOnPos.lat:null,
+    onLng:rideOnPos?rideOnPos.lng:null,
+    onAddr:rideOnPos?rideOnPos.addr:null,
+    // 降車位置
+    offLat:rideOffPos?rideOffPos.lat:null,
+    offLng:rideOffPos?rideOffPos.lng:null,
+    offAddr:rideOffPos?rideOffPos.addr:null,
   };
   sales.unshift(r);save();
+  rideOnPos=null; rideOffPos=null; // リセット
   document.getElementById('i-fare').value=0;
   document.getElementById('i-hw').value=0;
   document.getElementById('i-pk').value=0;
@@ -1003,10 +1009,41 @@ function saveSale(){
 }
 
 // ===== RIDE =====
+let rideOnPos = null;   // 乗車位置
+let rideOffPos = null;  // 降車位置
+
 function recordRide(t){
-  showToast(t==='on'?'🚕 乗車を記録しました':'🏁 降車を記録しました','info');
+  // GPS取得
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      const lat=pos.coords.latitude, lng=pos.coords.longitude;
+      // 逆ジオコーディング
+      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=ja&zoom=18`,
+        {headers:{'User-Agent':'taxi-app'}})
+        .then(r=>r.json()).then(rd=>{
+          const a=rd.address;
+          const chome=a.quarter||a.neighbourhood||a.suburb||a.city_district||'';
+          const loc=chome||(rd.display_name||'').split(',').slice(0,2).map(s=>s.trim()).join(' ')||`${lat.toFixed(4)},${lng.toFixed(4)}`;
+          if(t==='on'){
+            rideOnPos={lat,lng,addr:loc};
+            showToast('🚕 乗車位置を記録：'+loc,'info');
+          } else {
+            rideOffPos={lat,lng,addr:loc};
+            showToast('🏁 降車位置を記録：'+loc,'info');
+          }
+        }).catch(()=>{
+          if(t==='on') rideOnPos={lat,lng,addr:`${lat.toFixed(4)},${lng.toFixed(4)}`};
+          else rideOffPos={lat,lng,addr:`${lat.toFixed(4)},${lng.toFixed(4)}`};
+          showToast(t==='on'?'🚕 乗車位置を記録しました':'🏁 降車位置を記録しました','info');
+        });
+    }, ()=>{
+      showToast(t==='on'?'🚕 乗車ボタンを押しました（GPS取得失敗）':'🏁 降車ボタンを押しました（GPS取得失敗）','info');
+    },{enableHighAccuracy:true,timeout:8000,maximumAge:0});
+  } else {
+    showToast(t==='on'?'🚕 乗車を記録しました':'🏁 降車を記録しました','info');
+  }
+  // 降車時は運賃入力にフォーカス
   if(t==='off'){
-    // スクロールして運賃入力にフォーカス
     const input=document.getElementById('i-fare');
     input.scrollIntoView({behavior:'smooth',block:'center'});
     setTimeout(()=>{input.focus();input.select();},400);
@@ -1064,7 +1101,22 @@ function renderList(){
         <span class="sbadge sbadge-pay">${s.payment}</span>
         ${s.memo?`<span class="sbadge sbadge-memo">${s.memo}</span>`:''}
       </div>
-      ${s.addr?`<div class="sale-loc-row"><i class="ti ti-map-pin"></i>${s.addr}<a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank" style="color:var(--cyan);text-decoration:none;margin-left:5px;">地図▶</a></div>`:''}
+      ${s.onAddr||s.offAddr ? `
+        <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:5px;">
+          ${s.onAddr?`<div class="sale-loc-row">
+            <i class="ti ti-map-pin" style="color:var(--green)"></i>
+            <span style="color:var(--green);font-weight:600;margin-right:3px;">乗車</span>${s.onAddr}
+            ${s.onLat?`<a href="https://www.google.com/maps?q=${s.onLat},${s.onLng}" target="_blank" style="color:var(--cyan);text-decoration:none;margin-left:4px;">地図▶</a>`:''}
+          </div>`:''}
+          ${s.offAddr?`<div class="sale-loc-row">
+            <i class="ti ti-map-pin" style="color:var(--red)"></i>
+            <span style="color:var(--red);font-weight:600;margin-right:3px;">降車</span>${s.offAddr}
+            ${s.offLat?`<a href="https://www.google.com/maps?q=${s.offLat},${s.offLng}" target="_blank" style="color:var(--cyan);text-decoration:none;margin-left:4px;">地図▶</a>`:''}
+          </div>`:''}
+        </div>` : s.addr ? `<div class="sale-loc-row"><i class="ti ti-map-pin"></i>${s.addr}
+            ${s.lat?`<a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank" style="color:var(--cyan);text-decoration:none;margin-left:5px;">地図▶</a>`:''}
+          </div>` : ''
+      }
       <div class="sale-acts">
         <button class="sale-act" onclick="openEdit(${s.id})"><i class="ti ti-edit" style="font-size:12px"></i>編集</button>
         <button class="sale-act del" onclick="openDelete(${s.id},${s.total})"><i class="ti ti-trash" style="font-size:12px"></i>削除</button>
