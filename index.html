@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Taxi-Board">
+<meta name="apple-mobile-web-app-title" content="taxi売上">
 <meta name="theme-color" content="#0A0E14">
-<title>Taxi-Board</title>
+<title>taxi売上</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.11.0/dist/tabler-icons.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -62,12 +62,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
 .hbtn-rank:hover{background:rgba(245,166,35,0.2);box-shadow:0 0 12px var(--amber-glow);}
 .hbtn-list{background:rgba(255,107,53,0.1);border-color:rgba(255,107,53,0.4);color:var(--orange);}
 .hbtn-list:hover{background:rgba(255,107,53,0.2);box-shadow:0 0 12px var(--orange-glow);}
-.users-badge{
-  background:rgba(155,89,255,0.12);border:1px solid rgba(155,89,255,0.4);
-  border-radius:20px;padding:4px 10px;display:flex;align-items:center;gap:5px;
-}
-.users-label{font-size:9px;color:var(--purple);font-weight:700;letter-spacing:1px;}
-.users-num{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:700;color:var(--text);}
+
 
 /* WEATHER ROW */
 .header-row2{display:flex;gap:8px;align-items:stretch;}
@@ -467,15 +462,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
   <div class="header-row1">
     <div class="logo-area">
       <div class="logo-icon">🚕</div>
-      <span class="logo-text">Taxi-Board</span>
+      <span class="logo-text"><span style="color:var(--amber)">taxi</span><span style="font-size:14px;color:var(--text2);font-weight:500;">売上</span></span>
     </div>
-    <div class="users-badge">
-      <i class="ti ti-users" style="font-size:13px;color:var(--purple)"></i>
-      <div>
-        <div class="users-label">USERS</div>
-        <div class="users-num" id="users-num">654</div>
-      </div>
-    </div>
+
     <div class="header-btns">
       <div class="hbtn hbtn-cam" onclick="openCamera()" title="カメラ"><i class="ti ti-camera"></i></div>
       <div class="hbtn hbtn-rank" onclick="switchScreen('ranking',document.querySelector('[data-sc=ranking]'))" title="ランキング"><i class="ti ti-trophy"></i></div>
@@ -786,27 +775,100 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
   </div>
 </div>
 
-<!-- CAMERA -->
+<!-- LIVE CAMERA MODAL -->
 <div class="cam-modal" id="cam-modal">
-  <div class="cam-view">
-    <video id="cam-video" autoplay playsinline muted></video>
-    <div class="cam-overlay">
-      <div class="cam-top">
-        <div class="cam-close" onclick="closeCamera()"><i class="ti ti-x"></i></div>
-        <div style="color:#fff;font-size:12px;background:rgba(0,0,0,.5);padding:4px 10px;border-radius:20px;">📸 領収書・メーターを撮影</div>
-      </div>
-      <div class="cam-bottom">
-        <div class="cam-shutter" onclick="takePhoto()"></div>
-      </div>
-    </div>
+  <div class="cam-modal-hdr">
+    <div class="cam-modal-title"><i class="ti ti-video" style="font-size:18px"></i>ライブカメラ</div>
+    <div class="cam-modal-close" onclick="closeCamera()"><i class="ti ti-x"></i></div>
   </div>
-</div>
+  <div class="cam-list">
 
-<div class="cam-preview" id="cam-preview">
-  <canvas id="cam-canvas"></canvas>
-  <div class="cam-preview-btns">
-    <button class="cam-preview-btn retake" onclick="retakePhoto()">撮り直し</button>
-    <button class="cam-preview-btn use" onclick="usePhoto()">使用する</button>
+    <div class="cam-section-label">📍 新大阪駅</div>
+
+    <div class="cam-item">
+      <div class="cam-item-hdr">
+        <div class="cam-live-dot"></div>
+        <div class="cam-item-name">新大阪 待機場</div>
+        <div class="cam-item-badge">LIVE</div>
+      </div>
+      <iframe class="cam-embed" src="https://www.youtube.com/embed/l_KhuN2nooY?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
+      <button class="cam-expand-btn" onclick="openYT('l_KhuN2nooY')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
+    </div>
+
+    <div class="cam-item">
+      <div class="cam-item-hdr">
+        <div class="cam-live-dot"></div>
+        <div class="cam-item-name">新大阪 乗り場①</div>
+        <div class="cam-item-badge">LIVE</div>
+      </div>
+      <iframe class="cam-embed" src="https://www.youtube.com/embed/YRuBQ3136D0?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
+      <button class="cam-expand-btn" onclick="openYT('YRuBQ3136D0')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
+    </div>
+
+    <div class="cam-item">
+      <div class="cam-item-hdr">
+        <div class="cam-live-dot"></div>
+        <div class="cam-item-name">新大阪 乗り場②</div>
+        <div class="cam-item-badge">LIVE</div>
+      </div>
+      <iframe class="cam-embed" src="https://www.youtube.com/embed/vxRaY0mXBbU?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
+      <button class="cam-expand-btn" onclick="openYT('vxRaY0mXBbU')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
+    </div>
+
+    <div class="cam-item">
+      <div class="cam-item-hdr">
+        <div class="cam-live-dot"></div>
+        <div class="cam-item-name">新大阪 待機列</div>
+        <div class="cam-item-badge">LIVE</div>
+      </div>
+      <iframe class="cam-embed" src="https://www.youtube.com/embed/eHKFF2ly1vc?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
+      <button class="cam-expand-btn" onclick="openYT('eHKFF2ly1vc')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
+    </div>
+
+    <div class="cam-section-label">📍 大阪市内</div>
+
+    <div class="cam-item">
+      <div class="cam-item-hdr">
+        <div class="cam-live-dot"></div>
+        <div class="cam-item-name">大阪駅 桜橋口</div>
+        <div class="cam-item-badge">LIVE</div>
+      </div>
+      <iframe class="cam-embed" src="https://www.youtube.com/embed/jDCCynfjX9I?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
+      <button class="cam-expand-btn" onclick="openYT('jDCCynfjX9I')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
+    </div>
+
+    <div class="cam-item">
+      <div class="cam-item-hdr">
+        <div class="cam-live-dot"></div>
+        <div class="cam-item-name">新橋交差点（心斎橋）</div>
+        <div class="cam-item-badge">LIVE</div>
+      </div>
+      <iframe class="cam-embed" src="https://www.youtube.com/embed/aVAO2wSUsPo?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
+      <button class="cam-expand-btn" onclick="openYT('aVAO2wSUsPo')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
+    </div>
+
+    <div class="cam-section-label">📍 関西国際空港</div>
+
+    <div class="cam-item">
+      <div class="cam-item-hdr">
+        <div class="cam-live-dot"></div>
+        <div class="cam-item-name">関空 第1ターミナル（T1）</div>
+        <div class="cam-item-badge">LIVE</div>
+      </div>
+      <iframe class="cam-embed" src="https://www.youtube.com/embed/QlNRsUPGMaY?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
+      <button class="cam-expand-btn" onclick="openYT('QlNRsUPGMaY')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
+    </div>
+
+    <div class="cam-item">
+      <div class="cam-item-hdr">
+        <div class="cam-live-dot"></div>
+        <div class="cam-item-name">関空 第2ターミナル（T2）</div>
+        <div class="cam-item-badge">LIVE</div>
+      </div>
+      <iframe class="cam-embed" src="https://www.youtube.com/embed/v4bVUjsFqAQ?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
+      <button class="cam-expand-btn" onclick="openYT('v4bVUjsFqAQ')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
+    </div>
+
   </div>
 </div>
 
@@ -927,7 +989,15 @@ function saveSale(){
 }
 
 // ===== RIDE =====
-function recordRide(t){showToast(t==='on'?'🚕 乗車を記録しました':'🏁 降車を記録しました','info');}
+function recordRide(t){
+  showToast(t==='on'?'🚕 乗車を記録しました':'🏁 降車を記録しました','info');
+  if(t==='off'){
+    // スクロールして運賃入力にフォーカス
+    const input=document.getElementById('i-fare');
+    input.scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(()=>{input.focus();input.select();},400);
+  }
+}
 
 // ===== SCREEN =====
 function switchScreen(name,el){
@@ -1187,36 +1257,15 @@ function exportCSV(){
   showToast('CSVをダウンロードしました','info');
 }
 
-// ===== CAMERA =====
-async function openCamera(){
-  try{
-    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
-    document.getElementById('cam-video').srcObject=camStream;
-    document.getElementById('cam-modal').classList.add('open');
-  }catch(e){
-    showToast('カメラを使用できません','ng');
-  }
+// ===== LIVE CAMERA =====
+function openCamera(){
+  document.getElementById('cam-modal').classList.add('open');
 }
 function closeCamera(){
-  if(camStream)camStream.getTracks().forEach(t=>t.stop());
-  camStream=null;
   document.getElementById('cam-modal').classList.remove('open');
 }
-function takePhoto(){
-  const video=document.getElementById('cam-video');
-  const canvas=document.getElementById('cam-canvas');
-  canvas.width=video.videoWidth;canvas.height=video.videoHeight;
-  canvas.getContext('2d').drawImage(video,0,0);
-  capturedImage=canvas.toDataURL('image/jpeg',0.9);
-  document.getElementById('cam-preview').classList.add('open');
-}
-function retakePhoto(){document.getElementById('cam-preview').classList.remove('open');capturedImage=null;}
-function usePhoto(){
-  document.getElementById('cam-preview').classList.remove('open');
-  closeCamera();
-  showToast('📸 写真を保存しました','info');
-  // 写真をメモに反映（実際はOCR等が必要）
-  document.getElementById('i-memo').value='📸 写真添付';
+function openYT(id){
+  window.open('https://www.youtube.com/watch?v='+id,'_blank');
 }
 
 // ===== WEATHER =====
@@ -1247,23 +1296,13 @@ async function fetchWeather(){
 // ===== JARTIC =====
 function openJartic(){window.open('https://www.jartic.or.jp/','_blank');}
 
-// ===== USERS COUNTER (simulated) =====
-function animateUsers(){
-  const base=654;
-  setInterval(()=>{
-    const delta=Math.floor(Math.random()*3)-1;
-    const cur=parseInt(document.getElementById('users-num').textContent)||base;
-    document.getElementById('users-num').textContent=Math.max(600,cur+delta);
-  },5000);
-}
-
 // ===== CLOCK =====
 function tick(){
   // nothing needed in header now
 }
 
 // ===== BOOT =====
-load();updateHome();animateUsers();fetchWeather();
+load();updateHome();fetchWeather();
 </script>
 </body>
 </html>
