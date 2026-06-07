@@ -64,24 +64,20 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);
 }
 
 /* ===== LIST VIEW ===== */
-.cam-list-view{display:flex;flex-direction:column;gap:8px;}
+.cam-list-view{display:flex;flex-direction:column;gap:10px;}
 .cam-list-item{
   background:var(--bg2);border:1px solid var(--border);
   border-radius:var(--radius);overflow:hidden;
-  cursor:pointer;text-decoration:none;display:block;
-  transition:border-color .2s;
+  display:block;
 }
-.cam-list-item:active{opacity:.85;}
 .cam-list-name{
   font-size:15px;font-weight:700;color:var(--text);
   padding:10px 14px;text-align:center;
   background:var(--bg3);letter-spacing:.5px;
   border-bottom:1px solid var(--border);
 }
-.cam-list-img{
-  width:100%;aspect-ratio:16/9;object-fit:cover;
-  display:block;background:var(--bg3);
-  position:relative;
+.cam-list-embed{
+  width:100%;aspect-ratio:16/9;border:none;display:block;background:#000;
 }
 .cam-list-footer{
   display:flex;align-items:center;justify-content:space-between;
@@ -94,27 +90,26 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);
 }
 .live-dot{width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1.2s infinite;flex-shrink:0;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
-.yt-link{font-size:11px;color:var(--cyan);display:flex;align-items:center;gap:3px;}
+.yt-link{
+  font-size:11px;color:var(--cyan);display:flex;align-items:center;gap:3px;
+  text-decoration:none;
+}
 
 /* ===== GRID VIEW ===== */
 .cam-grid-view{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .cam-grid-item{
   background:var(--bg2);border:1px solid var(--border);
   border-radius:var(--radius);overflow:hidden;
-  cursor:pointer;text-decoration:none;display:block;
-  transition:border-color .2s,transform .15s;position:relative;
+  display:block;transition:border-color .2s;
 }
-.cam-grid-item:active{transform:scale(.96);}
-.cam-grid-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--bg3);}
-.cam-grid-overlay{
-  position:absolute;top:0;left:0;right:0;
-  padding:5px 6px;
-  background:linear-gradient(to bottom,rgba(0,0,0,.65),transparent);
+.cam-grid-embed{
+  width:100%;aspect-ratio:16/9;border:none;display:block;background:#000;
 }
 .cam-grid-name{
   font-size:11px;font-weight:700;color:var(--text);
   padding:6px 6px;text-align:center;
   border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;gap:5px;
 }
 
 /* hidden */
@@ -167,7 +162,9 @@ const CAMERAS = [
 
 let currentView = 'list';
 
-function thumb(id){ return `https://img.youtube.com/vi/${id}/mqdefault.jpg`; }
+function embedUrl(id){
+  return `https://www.youtube.com/embed/${id}?autoplay=0&rel=0&playsinline=1&modestbranding=1`;
+}
 function ytUrl(id){ return `https://www.youtube.com/watch?v=${id}`; }
 
 function render(){
@@ -185,14 +182,17 @@ function render(){
       wrap.className = 'cam-list-view';
       group.items.forEach(cam => {
         wrap.innerHTML += `
-          <a class="cam-list-item" href="${ytUrl(cam.id)}" target="_blank">
+          <div class="cam-list-item">
             <div class="cam-list-name">${cam.name}</div>
-            <img class="cam-list-img" src="${thumb(cam.id)}" alt="${cam.name}" loading="lazy">
+            <iframe class="cam-list-embed" src="${embedUrl(cam.id)}"
+              allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
             <div class="cam-list-footer">
               <span class="live-badge"><span class="live-dot"></span>LIVE</span>
-              <span class="yt-link"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</span>
+              <a class="yt-link" href="${ytUrl(cam.id)}" target="_blank">
+                <i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く
+              </a>
             </div>
-          </a>`;
+          </div>`;
       });
       el.appendChild(wrap);
     } else {
@@ -200,11 +200,14 @@ function render(){
       wrap.className = 'cam-grid-view';
       group.items.forEach(cam => {
         wrap.innerHTML += `
-          <a class="cam-grid-item" href="${ytUrl(cam.id)}" target="_blank">
-            <img class="cam-grid-img" src="${thumb(cam.id)}" alt="${cam.name}" loading="lazy">
-            <div class="cam-grid-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
-            <div class="cam-grid-name">${cam.name}</div>
-          </a>`;
+          <div class="cam-grid-item">
+            <iframe class="cam-grid-embed" src="${embedUrl(cam.id)}"
+              allowfullscreen allow="autoplay; encrypted-media" loading="lazy"></iframe>
+            <div class="cam-grid-name">
+              <span class="live-badge" style="font-size:9px;padding:1px 5px;"><span class="live-dot"></span>LIVE</span>
+              ${cam.name}
+            </div>
+          </div>`;
       });
       el.appendChild(wrap);
     }
