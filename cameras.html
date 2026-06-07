@@ -10,141 +10,215 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
-  --bg:#0A0E14;--bg2:#0f1520;--bg3:#141d2e;--border:#1e2d45;
+  --bg:#0A0E14;--bg2:#0f1520;--bg3:#141d2e;
+  --border:#1e2d45;--border2:#243356;
   --text:#e8f0fe;--text2:#7a99c8;--text3:#3d5580;
   --cyan:#00d4ff;--cyan-glow:rgba(0,212,255,0.2);
   --red:#ff4757;--amber:#f5a623;
+  --radius:12px;
 }
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Hiragino Sans','Noto Sans JP',sans-serif;overflow-x:hidden;}
+html,body{min-height:100%;background:var(--bg);color:var(--text);
+  font-family:'Hiragino Sans','Noto Sans JP',sans-serif;overflow-x:hidden;}
 
+/* HEADER */
 .header{
-  background:rgba(10,14,20,0.98);
-  backdrop-filter:blur(20px);
+  background:rgba(10,14,20,0.98);backdrop-filter:blur(20px);
   padding:max(env(safe-area-inset-top),14px) 14px 12px;
   border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:10px;
   position:sticky;top:0;z-index:10;
 }
-.back-btn{
-  background:var(--bg3);border:1px solid var(--border);
+.close-btn{
+  background:var(--bg3);border:1px solid var(--border2);
   border-radius:8px;width:36px;height:36px;
   display:flex;align-items:center;justify-content:center;
-  color:var(--text2);font-size:18px;cursor:pointer;
-  text-decoration:none;transition:all .2s;flex-shrink:0;
+  color:var(--text2);font-size:18px;cursor:pointer;flex-shrink:0;
+  transition:all .2s;
 }
-.back-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.close-btn:hover{border-color:var(--red);color:var(--red);}
 .header-title{
-  font-size:16px;font-weight:700;color:var(--cyan);
-  display:flex;align-items:center;gap:6px;
+  font-size:16px;font-weight:700;color:var(--cyan);flex:1;
+  display:flex;align-items:center;gap:7px;
   text-shadow:0 0 10px var(--cyan-glow);
+  letter-spacing:.5px;
+}
+.view-toggle{display:flex;gap:6px;}
+.toggle-btn{
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:8px;width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text2);font-size:17px;cursor:pointer;
+  transition:all .2s;flex-shrink:0;
+}
+.toggle-btn.active{
+  background:rgba(0,212,255,0.12);
+  border-color:var(--cyan);color:var(--cyan);
 }
 
-.content{padding:10px 12px 30px;display:flex;flex-direction:column;gap:6px;}
-
+/* CONTENT */
+.content{padding:10px 12px 30px;display:flex;flex-direction:column;gap:4px;}
 .section-label{
-  font-size:10px;color:var(--text3);
+  font-size:11px;font-weight:700;color:var(--text3);
   text-transform:uppercase;letter-spacing:1.5px;
-  font-weight:700;padding:8px 2px 4px;
+  padding:10px 2px 5px;
 }
 
-.cam-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px;}
-
-.cam-thumb{
-  border-radius:10px;overflow:hidden;cursor:pointer;
-  border:1px solid var(--border);background:var(--bg2);
-  transition:border-color .2s,transform .15s;
-  position:relative;
-  text-decoration:none;display:block;
+/* ===== LIST VIEW ===== */
+.cam-list-view{display:flex;flex-direction:column;gap:8px;}
+.cam-list-item{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+  cursor:pointer;text-decoration:none;display:block;
+  transition:border-color .2s;
 }
-.cam-thumb:active{transform:scale(0.96);}
-.cam-thumb-img{
+.cam-list-item:active{opacity:.85;}
+.cam-list-name{
+  font-size:15px;font-weight:700;color:var(--text);
+  padding:10px 14px;text-align:center;
+  background:var(--bg3);letter-spacing:.5px;
+  border-bottom:1px solid var(--border);
+}
+.cam-list-img{
   width:100%;aspect-ratio:16/9;object-fit:cover;
   display:block;background:var(--bg3);
+  position:relative;
 }
-.cam-thumb-overlay{
+.cam-list-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:7px 12px;
+}
+.live-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;font-weight:700;color:#fff;
+  background:rgba(255,71,87,.9);border-radius:4px;padding:2px 8px;
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1.2s infinite;flex-shrink:0;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+.yt-link{font-size:11px;color:var(--cyan);display:flex;align-items:center;gap:3px;}
+
+/* ===== GRID VIEW ===== */
+.cam-grid-view{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.cam-grid-item{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+  cursor:pointer;text-decoration:none;display:block;
+  transition:border-color .2s,transform .15s;position:relative;
+}
+.cam-grid-item:active{transform:scale(.96);}
+.cam-grid-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--bg3);}
+.cam-grid-overlay{
   position:absolute;top:0;left:0;right:0;
   padding:5px 6px;
   background:linear-gradient(to bottom,rgba(0,0,0,.65),transparent);
 }
-.live-badge{
-  display:inline-flex;align-items:center;gap:4px;
-  font-size:9px;font-weight:700;color:#fff;
-  background:rgba(255,71,87,.9);border-radius:4px;padding:2px 6px;
-}
-.live-dot{
-  width:6px;height:6px;border-radius:50%;background:#fff;
-  animation:blink 1.2s infinite;flex-shrink:0;
-}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
-.cam-thumb-name{
-  font-size:12px;font-weight:700;color:var(--text);
-  padding:7px 8px;background:var(--bg2);
+.cam-grid-name{
+  font-size:11px;font-weight:700;color:var(--text);
+  padding:6px 6px;text-align:center;
   border-top:1px solid var(--border);
-  text-align:center;
 }
+
+/* hidden */
+.hidden{display:none!important;}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <a class="back-btn" onclick="window.close()" href="javascript:void(0)"><i class="ti ti-x"></i></a>
+  <div class="close-btn" onclick="window.close()"><i class="ti ti-x"></i></div>
   <div class="header-title"><i class="ti ti-video" style="font-size:18px"></i>ライブカメラ</div>
+  <div class="view-toggle">
+    <div class="toggle-btn active" id="btn-list" onclick="setView('list')" title="リスト表示">
+      <i class="ti ti-list"></i>
+    </div>
+    <div class="toggle-btn" id="btn-grid" onclick="setView('grid')" title="グリッド表示">
+      <i class="ti ti-layout-grid"></i>
+    </div>
+  </div>
 </div>
 
-<div class="content">
+<div class="content" id="content"></div>
 
-  <div class="section-label">📍 新大阪駅</div>
-  <div class="cam-grid">
-    <a class="cam-thumb" href="https://www.youtube.com/watch?v=l_KhuN2nooY" target="_blank">
-      <img class="cam-thumb-img" src="https://img.youtube.com/vi/l_KhuN2nooY/mqdefault.jpg" alt="新大阪待機場">
-      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
-      <div class="cam-thumb-name">新大阪待機場</div>
-    </a>
-    <a class="cam-thumb" href="https://www.youtube.com/watch?v=YRuBQ3136D0" target="_blank">
-      <img class="cam-thumb-img" src="https://img.youtube.com/vi/YRuBQ3136D0/mqdefault.jpg" alt="新大阪乗り場">
-      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
-      <div class="cam-thumb-name">新大阪乗り場</div>
-    </a>
-    <a class="cam-thumb" href="https://www.youtube.com/watch?v=vxRaY0mXBbU" target="_blank">
-      <img class="cam-thumb-img" src="https://img.youtube.com/vi/vxRaY0mXBbU/mqdefault.jpg" alt="新大阪待機列">
-      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
-      <div class="cam-thumb-name">新大阪待機列</div>
-    </a>
-    <a class="cam-thumb" href="https://www.youtube.com/watch?v=eHKFF2ly1vc" target="_blank">
-      <img class="cam-thumb-img" src="https://img.youtube.com/vi/eHKFF2ly1vc/mqdefault.jpg" alt="新御堂筋">
-      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
-      <div class="cam-thumb-name">新御堂筋</div>
-    </a>
-  </div>
+<script>
+const CAMERAS = [
+  {
+    section:'📍 新大阪駅',
+    items:[
+      {name:'新大阪待機場', id:'l_KhuN2nooY'},
+      {name:'新大阪乗り場', id:'YRuBQ3136D0'},
+      {name:'新大阪待機列', id:'vxRaY0mXBbU'},
+      {name:'新御堂筋',     id:'eHKFF2ly1vc'},
+    ]
+  },
+  {
+    section:'📍 大阪市内',
+    items:[
+      {name:'大阪駅桜橋口', id:'jDCCynfjX9I'},
+      {name:'新橋交差点',   id:'aVAO2wSUsPo'},
+    ]
+  },
+  {
+    section:'📍 関西国際空港',
+    items:[
+      {name:'関空 T1', id:'QlNRsUPGMaY'},
+      {name:'関空 T2', id:'v4bVUjsFqAQ'},
+    ]
+  }
+];
 
-  <div class="section-label">📍 大阪市内</div>
-  <div class="cam-grid">
-    <a class="cam-thumb" href="https://www.youtube.com/watch?v=jDCCynfjX9I" target="_blank">
-      <img class="cam-thumb-img" src="https://img.youtube.com/vi/jDCCynfjX9I/mqdefault.jpg" alt="大阪駅桜橋口">
-      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
-      <div class="cam-thumb-name">大阪駅桜橋口</div>
-    </a>
-    <a class="cam-thumb" href="https://www.youtube.com/watch?v=aVAO2wSUsPo" target="_blank">
-      <img class="cam-thumb-img" src="https://img.youtube.com/vi/aVAO2wSUsPo/mqdefault.jpg" alt="新橋交差点">
-      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
-      <div class="cam-thumb-name">新橋交差点</div>
-    </a>
-  </div>
+let currentView = 'list';
 
-  <div class="section-label">📍 関西国際空港</div>
-  <div class="cam-grid">
-    <a class="cam-thumb" href="https://www.youtube.com/watch?v=QlNRsUPGMaY" target="_blank">
-      <img class="cam-thumb-img" src="https://img.youtube.com/vi/QlNRsUPGMaY/mqdefault.jpg" alt="関空T1">
-      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
-      <div class="cam-thumb-name">関空 T1</div>
-    </a>
-    <a class="cam-thumb" href="https://www.youtube.com/watch?v=v4bVUjsFqAQ" target="_blank">
-      <img class="cam-thumb-img" src="https://img.youtube.com/vi/v4bVUjsFqAQ/mqdefault.jpg" alt="関空T2">
-      <div class="cam-thumb-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
-      <div class="cam-thumb-name">関空 T2</div>
-    </a>
-  </div>
+function thumb(id){ return `https://img.youtube.com/vi/${id}/mqdefault.jpg`; }
+function ytUrl(id){ return `https://www.youtube.com/watch?v=${id}`; }
 
-</div>
+function render(){
+  const el = document.getElementById('content');
+  el.innerHTML = '';
+
+  CAMERAS.forEach(group => {
+    const label = document.createElement('div');
+    label.className = 'section-label';
+    label.textContent = group.section;
+    el.appendChild(label);
+
+    if(currentView === 'list'){
+      const wrap = document.createElement('div');
+      wrap.className = 'cam-list-view';
+      group.items.forEach(cam => {
+        wrap.innerHTML += `
+          <a class="cam-list-item" href="${ytUrl(cam.id)}" target="_blank">
+            <div class="cam-list-name">${cam.name}</div>
+            <img class="cam-list-img" src="${thumb(cam.id)}" alt="${cam.name}" loading="lazy">
+            <div class="cam-list-footer">
+              <span class="live-badge"><span class="live-dot"></span>LIVE</span>
+              <span class="yt-link"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</span>
+            </div>
+          </a>`;
+      });
+      el.appendChild(wrap);
+    } else {
+      const wrap = document.createElement('div');
+      wrap.className = 'cam-grid-view';
+      group.items.forEach(cam => {
+        wrap.innerHTML += `
+          <a class="cam-grid-item" href="${ytUrl(cam.id)}" target="_blank">
+            <img class="cam-grid-img" src="${thumb(cam.id)}" alt="${cam.name}" loading="lazy">
+            <div class="cam-grid-overlay"><span class="live-badge"><span class="live-dot"></span>LIVE</span></div>
+            <div class="cam-grid-name">${cam.name}</div>
+          </a>`;
+      });
+      el.appendChild(wrap);
+    }
+  });
+}
+
+function setView(v){
+  currentView = v;
+  document.getElementById('btn-list').classList.toggle('active', v==='list');
+  document.getElementById('btn-grid').classList.toggle('active', v==='grid');
+  render();
+}
+
+render();
+</script>
 </body>
 </html>
