@@ -1272,26 +1272,8 @@ function exportCSV(){
 }
 
 // ===== LIVE CAMERA =====
-let currentCamId = null;
 function openCamera(){
-  document.getElementById('cam-modal').classList.add('open');
-}
-function closeCamera(){
-  document.getElementById('cam-modal').classList.remove('open');
-}
-function openCamFull(id, name){
-  currentCamId = id;
-  document.getElementById('cam-full-title').textContent = name;
-  document.getElementById('cam-full-iframe').src =
-    'https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1';
-  document.getElementById('cam-full').classList.add('open');
-}
-function closeCamFull(){
-  document.getElementById('cam-full').classList.remove('open');
-  document.getElementById('cam-full-iframe').src = '';
-}
-function openYT(id){
-  window.open('https://www.youtube.com/watch?v='+(id||currentCamId),'_blank');
+  window.open('cameras.html','_blank');
 }
 
 // ===== WEATHER =====
