@@ -1304,12 +1304,23 @@ async function fetchWeather(){
       // 逆ジオコーディング（Nominatim）
       try{
         const rd = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=ja`,
+          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=ja&zoom=18&addressdetails=1`,
           {headers:{'User-Agent':'taxi-app'}}
         ).then(r=>r.json());
         const a = rd.address;
-        const loc = [a.suburb||a.neighbourhood||a.quarter||a.city_district||a.city, a.road]
-          .filter(Boolean).join(' ') || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+        // 丁目レベルを優先して取得
+        const chome   = a.quarter || a.neighbourhood || a.suburb || a.city_district || '';
+        const city    = a.city || a.town || a.village || '';
+        const ward    = a.city_district || a.suburb || '';
+        // display_nameから市区以降を抽出（例:「三軒家東一丁目, 大正区, 大阪市, 大阪府」）
+        let loc = '';
+        if(chome){
+          loc = chome;
+        } else {
+          // display_nameの先頭2要素を使う（丁目, 区 など）
+          const parts = (rd.display_name || '').split(',').map(s=>s.trim());
+          loc = parts.slice(0,2).join(' ') || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+        }
         locEl.textContent = loc;
         currentPos.addr = loc;
       }catch(e){
