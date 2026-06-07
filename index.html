@@ -1276,29 +1276,56 @@ function openCamera(){
   window.open('cameras.html','_blank');
 }
 
-// ===== WEATHER =====
+// ===== WEATHER (GPS) =====
 async function fetchWeather(){
-  if(!navigator.geolocation){document.getElementById('wx-loc').textContent='GPS非対応';return;}
-  navigator.geolocation.getCurrentPosition(async pos=>{
-    const {latitude:lat,longitude:lng}=pos.coords;
-    currentPos={lat,lng};
-    try{
-      // Open-Meteo (no API key required)
-      const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true&hourly=relativehumidity_2m&timezone=Asia%2FTokyo`);
-      const d=await r.json();
-      const temp=Math.round(d.current_weather.temperature);
-      const hum=d.hourly.relativehumidity_2m[new Date().getHours()]||'--';
-      document.getElementById('wx-temp').textContent=temp;
-      document.getElementById('wx-hum').textContent=hum;
-      // reverse geocode
-      const rg=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=ja`);
-      const rd=await rg.json();
-      const addr=rd.address;
-      const loc=[addr.suburb||addr.neighbourhood||addr.quarter||addr.city_district,addr.road].filter(Boolean).join(' ')||'現在地';
-      document.getElementById('wx-loc').textContent=loc;
-      currentPos.addr=loc;
-    }catch(e){document.getElementById('wx-loc').textContent='取得失敗';}
-  },()=>{document.getElementById('wx-loc').textContent='許可が必要です';});
+  const locEl = document.getElementById('wx-loc');
+  locEl.textContent = '取得中...';
+
+  if(!navigator.geolocation){
+    locEl.textContent = 'GPS非対応';
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async pos => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      currentPos = {lat, lng};
+
+      // 気象データ（Open-Meteo）
+      try{
+        const wx = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true&hourly=relativehumidity_2m&timezone=Asia%2FTokyo`
+        ).then(r=>r.json());
+        document.getElementById('wx-temp').textContent = Math.round(wx.current_weather.temperature);
+        document.getElementById('wx-hum').textContent  = wx.hourly.relativehumidity_2m[new Date().getHours()] ?? '--';
+      }catch(e){}
+
+      // 逆ジオコーディング（Nominatim）
+      try{
+        const rd = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=ja`,
+          {headers:{'User-Agent':'taxi-app'}}
+        ).then(r=>r.json());
+        const a = rd.address;
+        const loc = [a.suburb||a.neighbourhood||a.quarter||a.city_district||a.city, a.road]
+          .filter(Boolean).join(' ') || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+        locEl.textContent = loc;
+        currentPos.addr = loc;
+      }catch(e){
+        locEl.textContent = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+      }
+    },
+    err => {
+      const msgs = {
+        1: '🔒 許可されていません',
+        2: '📡 電波が弱い',
+        3: '⏱ タイムアウト'
+      };
+      locEl.innerHTML = `<span style="cursor:pointer;color:var(--amber);" onclick="fetchWeather()">${msgs[err.code]||'取得失敗'} 再試行▶</span>`;
+    },
+    {enableHighAccuracy: true, timeout: 10000, maximumAge: 60000}
+  );
 }
 
 // ===== JARTIC =====
