@@ -137,8 +137,13 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);
   border-top:1px solid var(--border);
 }
 
-/* hidden */
-.hidden{display:none!important;}
+.cam-embed-wrap{
+  position:relative;width:100%;aspect-ratio:16/9;background:#000;
+}
+.cam-embed{
+  position:absolute;inset:0;width:100%;height:100%;
+  border:none;display:block;
+}
 </style>
 </head>
 <body>
@@ -187,7 +192,9 @@ const CAMERAS = [
 
 let currentView = 'list';
 
-function thumb(id){ return `https://img.youtube.com/vi/${id}/mqdefault.jpg`; }
+function embedUrl(id){
+  return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&rel=0&playsinline=1&modestbranding=1&controls=1`;
+}
 function ytUrl(id){ return `https://www.youtube.com/watch?v=${id}`; }
 
 function render(){
@@ -207,10 +214,14 @@ function render(){
         wrap.innerHTML += `
           <div class="cam-list-item">
             <div class="cam-list-name">${cam.name}</div>
-            <a href="${ytUrl(cam.id)}" target="_blank" class="cam-thumb-link">
-              <img class="cam-list-img" src="${thumb(cam.id)}" alt="${cam.name}" loading="lazy">
-              <div class="play-overlay"><div class="play-btn">▶</div></div>
-            </a>
+            <div class="cam-embed-wrap">
+              <iframe class="cam-embed"
+                src="${embedUrl(cam.id)}"
+                frameborder="0"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowfullscreen
+                loading="lazy"></iframe>
+            </div>
             <div class="cam-list-footer">
               <span class="live-badge"><span class="live-dot"></span>LIVE</span>
               <a class="yt-link" href="${ytUrl(cam.id)}" target="_blank">
@@ -225,14 +236,17 @@ function render(){
       wrap.className = 'cam-grid-view';
       group.items.forEach(cam => {
         wrap.innerHTML += `
-          <a class="cam-grid-item" href="${ytUrl(cam.id)}" target="_blank">
-            <div class="cam-thumb-link" style="position:relative;display:block;">
-              <img class="cam-grid-img" src="${thumb(cam.id)}" alt="${cam.name}" loading="lazy">
-              <div class="play-overlay-sm"><div class="play-btn-sm">▶</div></div>
-              <div class="cam-grid-overlay"><span class="live-badge" style="font-size:9px;padding:1px 5px;"><span class="live-dot"></span>LIVE</span></div>
+          <div class="cam-grid-item">
+            <div class="cam-embed-wrap">
+              <iframe class="cam-embed"
+                src="${embedUrl(cam.id)}"
+                frameborder="0"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowfullscreen
+                loading="lazy"></iframe>
             </div>
             <div class="cam-grid-name">${cam.name}</div>
-          </a>`;
+          </div>`;
       });
       el.appendChild(wrap);
     }
