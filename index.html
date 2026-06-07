@@ -413,34 +413,50 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
   width:36px;height:36px;display:flex;align-items:center;justify-content:center;
   color:var(--text2);font-size:18px;cursor:pointer;transition:all .2s;flex-shrink:0;}
 .cam-modal-close:hover{border-color:var(--red);color:var(--red);}
-.cam-list{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:8px;}
+.cam-list{flex:1;overflow-y:auto;padding:10px 12px 20px;display:flex;flex-direction:column;gap:6px;}
 .cam-list::-webkit-scrollbar{display:none;}
-.cam-item{
-  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
-  overflow:hidden;cursor:pointer;transition:border-color .2s;
-}
-.cam-item:hover{border-color:var(--cyan);}
-.cam-item-hdr{
-  display:flex;align-items:center;gap:8px;padding:10px 12px;
-  border-bottom:1px solid var(--border);
-}
-.cam-live-dot{width:7px;height:7px;border-radius:50%;background:var(--red);
-  animation:blink 1.2s infinite;flex-shrink:0;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
-.cam-item-name{font-size:13px;font-weight:700;color:var(--text);flex:1;}
-.cam-item-badge{font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700;
-  background:rgba(255,71,87,0.15);border:1px solid rgba(255,71,87,0.3);color:var(--red);}
-.cam-item-open{font-size:11px;color:var(--cyan);display:flex;align-items:center;gap:3px;}
-.cam-embed{width:100%;aspect-ratio:16/9;border:none;display:block;}
-.cam-expand-btn{
-  width:100%;background:rgba(0,212,255,0.06);border:none;
-  padding:8px;font-size:11px;color:var(--cyan);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:4px;
-  transition:background .2s;
-}
-.cam-expand-btn:hover{background:rgba(0,212,255,0.12);}
 .cam-section-label{font-size:10px;color:var(--text3);text-transform:uppercase;
-  letter-spacing:1.5px;font-weight:700;padding:4px 2px 2px;}
+  letter-spacing:1.5px;font-weight:700;padding:6px 2px 2px;}
+.cam-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.cam-thumb{
+  border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;
+  border:1px solid var(--border);background:var(--bg2);
+  transition:border-color .2s,transform .15s;
+}
+.cam-thumb:hover{border-color:var(--cyan);transform:scale(1.02);}
+.cam-thumb:active{transform:scale(0.97);}
+.cam-thumb-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--bg3);}
+.cam-thumb-overlay{
+  position:absolute;top:0;left:0;right:0;
+  padding:5px 6px;
+  background:linear-gradient(to bottom,rgba(0,0,0,.6),transparent);
+}
+.cam-thumb{position:relative;}
+.cam-thumb-live{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:9px;font-weight:700;color:#fff;
+  background:rgba(255,71,87,.85);border-radius:4px;padding:2px 6px;
+}
+.cam-live-dot{width:6px;height:6px;border-radius:50%;background:#fff;
+  animation:blink 1.2s infinite;flex-shrink:0;}
+.cam-thumb-name{
+  font-size:12px;font-weight:700;color:var(--text);
+  padding:6px 8px;background:var(--bg2);
+  border-top:1px solid var(--border);
+  text-align:center;
+}
+
+/* FULLSCREEN CAMERA */
+.cam-full{display:none;position:fixed;inset:0;background:#000;z-index:210;flex-direction:column;max-width:430px;left:50%;transform:translateX(-50%);}
+.cam-full.open{display:flex;}
+.cam-full-hdr{
+  background:rgba(10,14,20,.98);backdrop-filter:blur(20px);
+  padding:max(env(safe-area-inset-top),12px) 14px 10px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.cam-full-title{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700;color:var(--cyan);}
+.cam-full-iframe{width:100%;height:100%;border:none;display:block;}
 
 /* TOAST */
 .toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(10px);
@@ -784,91 +800,89 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
   <div class="cam-list">
 
     <div class="cam-section-label">📍 新大阪駅</div>
-
-    <div class="cam-item">
-      <div class="cam-item-hdr">
-        <div class="cam-live-dot"></div>
-        <div class="cam-item-name">新大阪 待機場</div>
-        <div class="cam-item-badge">LIVE</div>
+    <div class="cam-grid">
+      <div class="cam-thumb" onclick="openCamFull('l_KhuN2nooY','新大阪 待機場')">
+        <img src="https://img.youtube.com/vi/l_KhuN2nooY/mqdefault.jpg" class="cam-thumb-img" alt="新大阪待機場">
+        <div class="cam-thumb-overlay">
+          <div class="cam-thumb-live"><span class="cam-live-dot"></span>LIVE</div>
+        </div>
+        <div class="cam-thumb-name">新大阪待機場</div>
       </div>
-      <iframe class="cam-embed" src="https://www.youtube.com/embed/l_KhuN2nooY?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
-      <button class="cam-expand-btn" onclick="openYT('l_KhuN2nooY')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
-    </div>
-
-    <div class="cam-item">
-      <div class="cam-item-hdr">
-        <div class="cam-live-dot"></div>
-        <div class="cam-item-name">新大阪 乗り場①</div>
-        <div class="cam-item-badge">LIVE</div>
+      <div class="cam-thumb" onclick="openCamFull('YRuBQ3136D0','新大阪 乗り場①')">
+        <img src="https://img.youtube.com/vi/YRuBQ3136D0/mqdefault.jpg" class="cam-thumb-img" alt="新大阪乗り場①">
+        <div class="cam-thumb-overlay">
+          <div class="cam-thumb-live"><span class="cam-live-dot"></span>LIVE</div>
+        </div>
+        <div class="cam-thumb-name">新大阪乗り場</div>
       </div>
-      <iframe class="cam-embed" src="https://www.youtube.com/embed/YRuBQ3136D0?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
-      <button class="cam-expand-btn" onclick="openYT('YRuBQ3136D0')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
-    </div>
-
-    <div class="cam-item">
-      <div class="cam-item-hdr">
-        <div class="cam-live-dot"></div>
-        <div class="cam-item-name">新大阪 乗り場②</div>
-        <div class="cam-item-badge">LIVE</div>
+      <div class="cam-thumb" onclick="openCamFull('vxRaY0mXBbU','新大阪 待機列')">
+        <img src="https://img.youtube.com/vi/vxRaY0mXBbU/mqdefault.jpg" class="cam-thumb-img" alt="新大阪待機列">
+        <div class="cam-thumb-overlay">
+          <div class="cam-thumb-live"><span class="cam-live-dot"></span>LIVE</div>
+        </div>
+        <div class="cam-thumb-name">新大阪待機列</div>
       </div>
-      <iframe class="cam-embed" src="https://www.youtube.com/embed/vxRaY0mXBbU?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
-      <button class="cam-expand-btn" onclick="openYT('vxRaY0mXBbU')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
-    </div>
-
-    <div class="cam-item">
-      <div class="cam-item-hdr">
-        <div class="cam-live-dot"></div>
-        <div class="cam-item-name">新大阪 待機列</div>
-        <div class="cam-item-badge">LIVE</div>
+      <div class="cam-thumb" onclick="openCamFull('eHKFF2ly1vc','新御堂筋')">
+        <img src="https://img.youtube.com/vi/eHKFF2ly1vc/mqdefault.jpg" class="cam-thumb-img" alt="新御堂筋">
+        <div class="cam-thumb-overlay">
+          <div class="cam-thumb-live"><span class="cam-live-dot"></span>LIVE</div>
+        </div>
+        <div class="cam-thumb-name">新御堂筋</div>
       </div>
-      <iframe class="cam-embed" src="https://www.youtube.com/embed/eHKFF2ly1vc?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
-      <button class="cam-expand-btn" onclick="openYT('eHKFF2ly1vc')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
     </div>
 
     <div class="cam-section-label">📍 大阪市内</div>
-
-    <div class="cam-item">
-      <div class="cam-item-hdr">
-        <div class="cam-live-dot"></div>
-        <div class="cam-item-name">大阪駅 桜橋口</div>
-        <div class="cam-item-badge">LIVE</div>
+    <div class="cam-grid">
+      <div class="cam-thumb" onclick="openCamFull('jDCCynfjX9I','大阪駅 桜橋口')">
+        <img src="https://img.youtube.com/vi/jDCCynfjX9I/mqdefault.jpg" class="cam-thumb-img" alt="大阪駅桜橋口">
+        <div class="cam-thumb-overlay">
+          <div class="cam-thumb-live"><span class="cam-live-dot"></span>LIVE</div>
+        </div>
+        <div class="cam-thumb-name">大阪駅桜橋口</div>
       </div>
-      <iframe class="cam-embed" src="https://www.youtube.com/embed/jDCCynfjX9I?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
-      <button class="cam-expand-btn" onclick="openYT('jDCCynfjX9I')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
-    </div>
-
-    <div class="cam-item">
-      <div class="cam-item-hdr">
-        <div class="cam-live-dot"></div>
-        <div class="cam-item-name">新橋交差点（心斎橋）</div>
-        <div class="cam-item-badge">LIVE</div>
+      <div class="cam-thumb" onclick="openCamFull('aVAO2wSUsPo','新橋交差点')">
+        <img src="https://img.youtube.com/vi/aVAO2wSUsPo/mqdefault.jpg" class="cam-thumb-img" alt="新橋交差点">
+        <div class="cam-thumb-overlay">
+          <div class="cam-thumb-live"><span class="cam-live-dot"></span>LIVE</div>
+        </div>
+        <div class="cam-thumb-name">新橋交差点</div>
       </div>
-      <iframe class="cam-embed" src="https://www.youtube.com/embed/aVAO2wSUsPo?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
-      <button class="cam-expand-btn" onclick="openYT('aVAO2wSUsPo')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
     </div>
 
     <div class="cam-section-label">📍 関西国際空港</div>
-
-    <div class="cam-item">
-      <div class="cam-item-hdr">
-        <div class="cam-live-dot"></div>
-        <div class="cam-item-name">関空 第1ターミナル（T1）</div>
-        <div class="cam-item-badge">LIVE</div>
+    <div class="cam-grid">
+      <div class="cam-thumb" onclick="openCamFull('QlNRsUPGMaY','関空 T1')">
+        <img src="https://img.youtube.com/vi/QlNRsUPGMaY/mqdefault.jpg" class="cam-thumb-img" alt="関空T1">
+        <div class="cam-thumb-overlay">
+          <div class="cam-thumb-live"><span class="cam-live-dot"></span>LIVE</div>
+        </div>
+        <div class="cam-thumb-name">関空 T1</div>
       </div>
-      <iframe class="cam-embed" src="https://www.youtube.com/embed/QlNRsUPGMaY?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
-      <button class="cam-expand-btn" onclick="openYT('QlNRsUPGMaY')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
+      <div class="cam-thumb" onclick="openCamFull('v4bVUjsFqAQ','関空 T2')">
+        <img src="https://img.youtube.com/vi/v4bVUjsFqAQ/mqdefault.jpg" class="cam-thumb-img" alt="関空T2">
+        <div class="cam-thumb-overlay">
+          <div class="cam-thumb-live"><span class="cam-live-dot"></span>LIVE</div>
+        </div>
+        <div class="cam-thumb-name">関空 T2</div>
+      </div>
     </div>
 
-    <div class="cam-item">
-      <div class="cam-item-hdr">
-        <div class="cam-live-dot"></div>
-        <div class="cam-item-name">関空 第2ターミナル（T2）</div>
-        <div class="cam-item-badge">LIVE</div>
-      </div>
-      <iframe class="cam-embed" src="https://www.youtube.com/embed/v4bVUjsFqAQ?autoplay=0&rel=0" allowfullscreen loading="lazy"></iframe>
-      <button class="cam-expand-btn" onclick="openYT('v4bVUjsFqAQ')"><i class="ti ti-external-link" style="font-size:12px"></i>YouTubeで開く</button>
-    </div>
+  </div>
+</div>
 
+<!-- CAMERA FULLSCREEN -->
+<div class="cam-full" id="cam-full">
+  <div class="cam-full-hdr">
+    <div class="cam-full-title" id="cam-full-title"></div>
+    <div style="display:flex;gap:7px;">
+      <div class="cam-modal-close" onclick="openYT(currentCamId)" style="width:auto;padding:0 10px;gap:4px;display:flex;align-items:center;font-size:11px;color:var(--cyan);border-color:rgba(0,212,255,.3);">
+        <i class="ti ti-external-link" style="font-size:13px"></i>YT
+      </div>
+      <div class="cam-modal-close" onclick="closeCamFull()"><i class="ti ti-x"></i></div>
+    </div>
+  </div>
+  <div style="flex:1;background:#000;display:flex;align-items:center;">
+    <iframe id="cam-full-iframe" class="cam-full-iframe" src="" allowfullscreen allow="autoplay"></iframe>
   </div>
 </div>
 
@@ -1258,14 +1272,26 @@ function exportCSV(){
 }
 
 // ===== LIVE CAMERA =====
+let currentCamId = null;
 function openCamera(){
   document.getElementById('cam-modal').classList.add('open');
 }
 function closeCamera(){
   document.getElementById('cam-modal').classList.remove('open');
 }
+function openCamFull(id, name){
+  currentCamId = id;
+  document.getElementById('cam-full-title').textContent = name;
+  document.getElementById('cam-full-iframe').src =
+    'https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1';
+  document.getElementById('cam-full').classList.add('open');
+}
+function closeCamFull(){
+  document.getElementById('cam-full').classList.remove('open');
+  document.getElementById('cam-full-iframe').src = '';
+}
 function openYT(id){
-  window.open('https://www.youtube.com/watch?v='+id,'_blank');
+  window.open('https://www.youtube.com/watch?v='+(id||currentCamId),'_blank');
 }
 
 // ===== WEATHER =====
