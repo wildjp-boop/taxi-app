@@ -404,10 +404,60 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
 .nav-item i{font-size:22px;color:var(--text3);transition:all .15s;}
 .nav-item span{font-size:9px;color:var(--text3);transition:all .15s;font-weight:600;}
 .nav-item.active i,.nav-item.active span{color:var(--amber);}
+.nav-svg{color:var(--text3);transition:all .2s;}
+.nav-item.active .nav-svg{color:var(--amber);filter:drop-shadow(0 0 4px rgba(245,166,35,.6));}
 .nav-item.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
-  width:32px;height:2px;background:var(--amber);border-radius:0 0 3px 3px;
-  box-shadow:0 0 8px var(--amber-glow);}
+  width:32px;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent);
+  border-radius:0 0 3px 3px;box-shadow:0 0 8px var(--amber-glow);}
 .nav-item{position:relative;}
+
+/* RIDE BUTTON REDESIGN */
+.ride-main-btn{
+  width:100%;border:none;border-radius:var(--radius);
+  padding:0;cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .15s;
+  background:transparent;
+}
+.ride-main-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 50%);
+  pointer-events:none;
+}
+.ride-btn-bg{
+  padding:18px 14px;
+  background:linear-gradient(135deg,#c94400,#f04800,#f5a623);
+  border-radius:var(--radius);
+  box-shadow:0 8px 28px rgba(240,72,0,.5),inset 0 1px 0 rgba(255,255,255,.2);
+  transition:all .2s;
+}
+.ride-main-btn.is-on .ride-btn-bg{
+  background:linear-gradient(135deg,#8b0000,#cc1122,#ff4757);
+  box-shadow:0 8px 28px rgba(255,71,87,.55),inset 0 1px 0 rgba(255,255,255,.15);
+  animation:pulse-btn 1.8s infinite;
+}
+@keyframes pulse-btn{
+  0%,100%{box-shadow:0 8px 28px rgba(255,71,87,.55),inset 0 1px 0 rgba(255,255,255,.15);}
+  50%{box-shadow:0 10px 40px rgba(255,71,87,.8),inset 0 1px 0 rgba(255,255,255,.15);}
+}
+.ride-main-btn:active{transform:scale(.97);}
+.ride-main-btn:active .ride-btn-bg{box-shadow:0 4px 12px rgba(240,72,0,.3);}
+.ride-btn-inner{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  font-size:17px;font-weight:900;color:#fff;
+  font-family:'Noto Sans JP',sans-serif;letter-spacing:.5px;
+  text-shadow:0 1px 6px rgba(0,0,0,.4);
+  position:relative;z-index:1;
+}
+.ride-btn-icon-wrap{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(0,0,0,.2);
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,.25);
+  flex-shrink:0;
+}
+
+/* HEADER BTN update for SVG */
+.hbtn svg{display:block;}
 
 /* ===== MODALS ===== */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);
@@ -529,14 +579,44 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
 <div class="header">
   <div class="header-row1">
     <div class="logo-area">
-      <div class="logo-icon">🚕</div>
+      <div class="logo-icon" style="background:linear-gradient(135deg,#1a2a4a,#0d1a30);border:1px solid rgba(245,166,35,0.4);box-shadow:0 0 12px rgba(245,166,35,0.2);">
+        <svg width="28" height="22" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="8" width="22" height="11" rx="3" fill="#f5a623"/>
+          <rect x="6" y="4" width="14" height="7" rx="2" fill="#ffbf47"/>
+          <circle cx="7.5" cy="19.5" r="2.5" fill="#0d1a30" stroke="#f5a623" stroke-width="1"/>
+          <circle cx="20.5" cy="19.5" r="2.5" fill="#0d1a30" stroke="#f5a623" stroke-width="1"/>
+          <rect x="8" y="6" width="5" height="4" rx="1" fill="#87ceeb" opacity=".8"/>
+          <rect x="14" y="6" width="5" height="4" rx="1" fill="#87ceeb" opacity=".8"/>
+          <rect x="1" y="13" width="3" height="2" rx="1" fill="#00d4ff"/>
+          <rect x="24" y="13" width="3" height="2" rx="1" fill="#ff4757"/>
+          <rect x="10" y="2" width="8" height="2.5" rx="1" fill="#f5a623"/>
+        </svg>
+      </div>
       <span class="logo-text"><span style="color:var(--amber)">taxi</span><span style="font-size:14px;color:var(--text2);font-weight:500;">売上</span></span>
+      <span style="font-size:9px;font-weight:700;color:var(--text3);background:var(--bg4);border:1px solid var(--border2);border-radius:4px;padding:2px 5px;letter-spacing:.5px;font-family:'Orbitron',sans-serif;">v1.0.0</span>
     </div>
 
     <div class="header-btns">
-      <div class="hbtn hbtn-cam" onclick="openCamera()" title="カメラ"><i class="ti ti-camera"></i></div>
-      <div class="hbtn hbtn-rank" onclick="switchScreen('ranking',document.querySelector('[data-sc=ranking]'))" title="ランキング"><i class="ti ti-trophy"></i></div>
-      <div class="hbtn hbtn-list" onclick="switchScreen('history',document.querySelector('[data-sc=history]'))" title="履歴"><i class="ti ti-clipboard-list"></i></div>
+      <div class="hbtn hbtn-cam" onclick="openCamera()" title="カメラ">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M2 6.5C2 5.4 2.9 4.5 4 4.5h1.5l1-2h5l1 2H14c1.1 0 2 .9 2 2v7c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+          <circle cx="9" cy="10" r="2.5" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="13.5" cy="7" r=".8" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="hbtn hbtn-rank" onclick="switchScreen('ranking',document.querySelector('[data-sc=ranking]'))" title="ランキング">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M9 2l1.8 3.6L15 6.3l-3 2.9.7 4.1L9 11.4l-3.7 1.9.7-4.1-3-2.9 4.2-.7L9 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="hbtn hbtn-list" onclick="switchScreen('history',document.querySelector('[data-sc=history]'))" title="履歴">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <rect x="2" y="2" width="14" height="14" rx="2.5" stroke="currentColor" stroke-width="1.4"/>
+          <line x1="5" y1="6" x2="13" y2="6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="5" y1="9" x2="13" y2="9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="5" y1="12" x2="10" y2="12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
     </div>
   </div>
   <div class="header-row2">
@@ -626,9 +706,18 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
       <span id="ride-timer" style="font-family:'Orbitron',sans-serif;font-size:13px;color:var(--cyan);font-weight:700;">00:00</span>
     </div>
     <button class="ride-main-btn" id="ride-main-btn" onclick="toggleRide()">
-      <div class="ride-btn-inner" id="ride-btn-inner">
-        <i class="ti ti-send" id="ride-btn-icon" style="font-size:22px"></i>
-        <span id="ride-btn-label">実車［乗車位置・時間を記録］</span>
+      <div class="ride-btn-bg">
+        <div class="ride-btn-inner" id="ride-btn-inner">
+          <div class="ride-btn-icon-wrap">
+            <svg id="ride-btn-svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M22 12.5l-3-7H5l-3 7v6h2v1.5a1.5 1.5 0 003 0V18.5h10v1.5a1.5 1.5 0 003 0V18.5h2v-6z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>
+              <circle cx="7.5" cy="15" r="1.5" fill="#fff"/>
+              <circle cx="16.5" cy="15" r="1.5" fill="#fff"/>
+              <path d="M5.5 12.5l1.5-4h10l1.5 4H5.5z" fill="rgba(255,255,255,0.25)"/>
+            </svg>
+          </div>
+          <span id="ride-btn-label">実車［乗車位置・時間を記録］</span>
+        </div>
       </div>
     </button>
   </div>
@@ -671,8 +760,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
       <input class="memo-in" id="i-memo" type="text" placeholder="メモ...">
       <button class="save-btn" onclick="saveSale()">保存</button>
     </div>
-    <!-- 乗降位置ステータス -->
-    <div id="ride-status" style="margin-top:8px;display:flex;flex-direction:column;gap:4px;"></div>
+    <!-- 乗降位置ステータス（常時表示） -->
+    <div id="ride-status" style="margin-top:8px;display:flex;flex-direction:column;gap:4px;">
+      <div style="font-size:11px;display:flex;align-items:center;gap:4px;padding:5px 8px;background:var(--bg4);border:1px solid var(--border);border-radius:7px;opacity:.45;">
+        <i class="ti ti-map-pin" style="color:var(--text3);font-size:12px"></i>
+        <span style="color:var(--text3);">実車ボタンを押すと乗降位置を自動記録します</span>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -805,11 +899,42 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
-  <div class="nav-item active" data-sc="home" onclick="switchScreen('home',this)"><i class="ti ti-home"></i><span>ホーム</span></div>
-  <div class="nav-item" data-sc="history" onclick="switchScreen('history',this)"><i class="ti ti-history"></i><span>履歴</span></div>
-  <div class="nav-item" data-sc="ranking" onclick="switchScreen('ranking',this)"><i class="ti ti-trophy"></i><span>ランキング</span></div>
-  <div class="nav-item" data-sc="analytics" onclick="switchScreen('analytics',this)"><i class="ti ti-chart-bar"></i><span>解析</span></div>
-  <div class="nav-item" data-sc="settings" onclick="switchScreen('settings',this)"><i class="ti ti-settings"></i><span>設定</span></div>
+  <div class="nav-item active" data-sc="home" onclick="switchScreen('home',this)">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="nav-svg">
+      <path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H15v-5h-6v5H4a1 1 0 01-1-1V10.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    </svg>
+    <span>ホーム</span>
+  </div>
+  <div class="nav-item" data-sc="history" onclick="switchScreen('history',this)">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="nav-svg">
+      <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.6"/>
+      <line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="7" y1="12" x2="17" y2="12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="7" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <span>履歴</span>
+  </div>
+  <div class="nav-item" data-sc="ranking" onclick="switchScreen('ranking',this)">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="nav-svg">
+      <path d="M12 3l2.1 4.3 4.7.7-3.4 3.3.8 4.7L12 13.8l-4.2 2.2.8-4.7L5.2 8l4.7-.7L12 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    </svg>
+    <span>ランキング</span>
+  </div>
+  <div class="nav-item" data-sc="analytics" onclick="switchScreen('analytics',this)">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="nav-svg">
+      <rect x="3" y="12" width="4" height="9" rx="1" stroke="currentColor" stroke-width="1.6"/>
+      <rect x="10" y="7" width="4" height="14" rx="1" stroke="currentColor" stroke-width="1.6"/>
+      <rect x="17" y="3" width="4" height="18" rx="1" stroke="currentColor" stroke-width="1.6"/>
+    </svg>
+    <span>解析</span>
+  </div>
+  <div class="nav-item" data-sc="settings" onclick="switchScreen('settings',this)">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="nav-svg">
+      <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <span>設定</span>
+  </div>
 </div>
 
 </div><!-- end app -->
@@ -981,6 +1106,7 @@ const PAY_COLORS={現金:'#00e676',クレカ:'#1e90ff',アプリ決済:'#f5a623'
 let sales=[], cfg={monthly:800000,days:5,tax:10,closeDay:20,startTime:'15:00'};
 let deleteId=null, currentFilter='all', analyticsDays=7, rankTab='today';
 let camStream=null, capturedImage=null, currentPos=null;
+let rideOnPos=null, rideOffPos=null, isRiding=false, rideOnTime=null, rideTimerInterval=null, isAcquiring=false;
 
 // ===== INIT =====
 function load(){
@@ -1072,23 +1198,39 @@ function saveSale(){
   const tip=parseInt(document.getElementById('i-tip').value)||0;
   const total=fare+hw+pk+tip;
   if(total<=0){showToast('金額を入力してください','ng');return;}
+
+  // GPS取得中なら最大5秒待つ
+  if(isAcquiring){
+    showToast('📍 位置情報取得中... しばらくお待ちください','info');
+    let wait=0;
+    const check=setInterval(()=>{
+      wait+=500;
+      if(!isAcquiring||wait>=5000){
+        clearInterval(check);
+        doSave(fare,hw,pk,tip,total);
+      }
+    },500);
+    return;
+  }
+  doSave(fare,hw,pk,tip,total);
+}
+
+function doSave(fare,hw,pk,tip,total){
   const r={
     id:Date.now(),date:todayStr(),time:timeStr(),
     fare,highway:hw,pickup:pk,tip,total,
     category:getTag('cat-tags')||'アプリ',
     payment:getTag('pay-tags')||'クレカ',
     memo:document.getElementById('i-memo').value,
-    // 乗車位置
     onLat:rideOnPos?rideOnPos.lat:null,
     onLng:rideOnPos?rideOnPos.lng:null,
     onAddr:rideOnPos?rideOnPos.addr:null,
-    // 降車位置
     offLat:rideOffPos?rideOffPos.lat:null,
     offLng:rideOffPos?rideOffPos.lng:null,
     offAddr:rideOffPos?rideOffPos.addr:null,
   };
   sales.unshift(r);save();
-  rideOnPos=null; rideOffPos=null;
+  rideOnPos=null;rideOffPos=null;isAcquiring=false;
   updateRideStatus();
   document.getElementById('i-fare').value=0;
   document.getElementById('i-hw').value=0;
@@ -1096,34 +1238,50 @@ function saveSale(){
   document.getElementById('i-tip').value=0;
   document.getElementById('i-memo').value='';
   updateHome();renderList();
-  showToast('✓ 保存しました '+fmt(total));
+  const locInfo=(r.onAddr||r.offAddr)?` 📍${r.onAddr||''}→${r.offAddr||''}`:'' ;
+  showToast('✓ 保存しました '+fmt(total)+locInfo);
 }
 
 // ===== RIDE =====
-let rideOnPos = null;
-let rideOffPos = null;
-let isRiding = false;
-let rideOnTime = null;
-let rideTimerInterval = null;
 
 function updateRideStatus(){
   const el = document.getElementById('ride-status');
   if(!el) return;
+  // 何も記録なし
+  if(!rideOnPos && !rideOffPos && !isRiding){
+    el.innerHTML = `<div style="font-size:11px;display:flex;align-items:center;gap:4px;padding:5px 8px;background:var(--bg4);border:1px solid var(--border);border-radius:7px;opacity:.45;">
+      <i class="ti ti-map-pin" style="color:var(--text3);font-size:12px"></i>
+      <span style="color:var(--text3);">実車ボタンを押すと乗降位置を自動記録します</span>
+    </div>`;
+    return;
+  }
   let html = '';
+  // 乗車位置
   if(rideOnPos){
     html += `<div style="font-size:11px;display:flex;align-items:center;gap:4px;padding:5px 8px;background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.25);border-radius:7px;">
       <i class="ti ti-map-pin" style="color:var(--green);font-size:12px"></i>
-      <span style="color:var(--green);font-weight:700;">乗車</span>
-      <span style="color:var(--text2);flex:1;">${rideOnPos.addr||'位置取得済み'}</span>
-      <span style="color:var(--text3);cursor:pointer;" onclick="rideOnPos=null;updateRideStatus()">✕</span>
+      <span style="color:var(--green);font-weight:700;white-space:nowrap;">🟢 乗車</span>
+      <span style="color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${rideOnPos.addr||'位置取得済み'}</span>
+      <span style="color:var(--text3);cursor:pointer;flex-shrink:0;" onclick="rideOnPos=null;updateRideStatus()">✕</span>
+    </div>`;
+  } else if(isRiding){
+    html += `<div style="font-size:11px;display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.15);border-radius:7px;">
+      <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);animation:blink 1s infinite;flex-shrink:0;"></span>
+      <span style="color:var(--text3);">乗車位置 取得中...</span>
     </div>`;
   }
+  // 降車位置
   if(rideOffPos){
     html += `<div style="font-size:11px;display:flex;align-items:center;gap:4px;padding:5px 8px;background:rgba(255,71,87,0.08);border:1px solid rgba(255,71,87,0.25);border-radius:7px;">
       <i class="ti ti-map-pin" style="color:var(--red);font-size:12px"></i>
-      <span style="color:var(--red);font-weight:700;">降車</span>
-      <span style="color:var(--text2);flex:1;">${rideOffPos.addr||'位置取得済み'}</span>
-      <span style="color:var(--text3);cursor:pointer;" onclick="rideOffPos=null;updateRideStatus()">✕</span>
+      <span style="color:var(--red);font-weight:700;white-space:nowrap;">🔴 降車</span>
+      <span style="color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${rideOffPos.addr||'位置取得済み'}</span>
+      <span style="color:var(--text3);cursor:pointer;flex-shrink:0;" onclick="rideOffPos=null;updateRideStatus()">✕</span>
+    </div>`;
+  } else if(!isRiding && rideOnPos){
+    html += `<div style="font-size:11px;display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(255,71,87,0.05);border:1px solid rgba(255,71,87,0.15);border-radius:7px;">
+      <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);animation:blink 1s infinite;flex-shrink:0;"></span>
+      <span style="color:var(--text3);">降車位置 取得中...</span>
     </div>`;
   }
   el.innerHTML = html;
@@ -1131,6 +1289,8 @@ function updateRideStatus(){
 
 function gpsAndAddr(callback){
   if(!navigator.geolocation){ callback(null); return; }
+  isAcquiring=true;
+  updateRideStatus();
   navigator.geolocation.getCurrentPosition(pos=>{
     const lat=pos.coords.latitude, lng=pos.coords.longitude;
     fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=ja&zoom=18`,
@@ -1139,12 +1299,21 @@ function gpsAndAddr(callback){
         const a=rd.address;
         const chome=a.quarter||a.neighbourhood||a.suburb||a.city_district||'';
         const loc=chome||(rd.display_name||'').split(',').slice(0,2).map(s=>s.trim()).join(' ')||`${lat.toFixed(4)},${lng.toFixed(4)}`;
+        isAcquiring=false;
         callback({lat,lng,addr:loc});
-      }).catch(()=>callback({lat,lng,addr:`${lat.toFixed(4)},${lng.toFixed(4)}`}));
-  },()=>callback(null),{enableHighAccuracy:true,timeout:8000,maximumAge:0});
+      }).catch(()=>{
+        isAcquiring=false;
+        callback({lat,lng,addr:`${lat.toFixed(4)},${lng.toFixed(4)}`});
+      });
+  },()=>{
+    isAcquiring=false;
+    callback(null);
+  },{enableHighAccuracy:true,timeout:8000,maximumAge:0});
 }
 
 function toggleRide(){
+  const flagSvg=`<path d="M5 3v18M5 3h14l-3 5 3 5H5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const carSvg=`<path d="M22 12.5l-3-7H5l-3 7v6h2v1.5a1.5 1.5 0 003 0V18.5h10v1.5a1.5 1.5 0 003 0V18.5h2v-6z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><circle cx="7.5" cy="15" r="1.5" fill="#fff"/><circle cx="16.5" cy="15" r="1.5" fill="#fff"/><path d="M5.5 12.5l1.5-4h10l1.5 4H5.5z" fill="rgba(255,255,255,0.25)"/>`;
   if(!isRiding){
     // 空車 → 実車
     isRiding = true;
@@ -1154,7 +1323,7 @@ function toggleRide(){
     // ボタン変更（実車中＝赤く光る）
     const btn = document.getElementById('ride-main-btn');
     btn.classList.add('is-on');
-    document.getElementById('ride-btn-icon').className = 'ti ti-flag-2';
+    document.getElementById('ride-btn-svg').innerHTML = flagSvg;
     document.getElementById('ride-btn-label').textContent = '降車［降車位置・時間を記録］';
     document.getElementById('ride-status-chip').innerHTML =
       '<span class="ride-dot" style="background:var(--red);box-shadow:0 0 8px var(--red)"></span><span>実車中</span>';
@@ -1186,7 +1355,7 @@ function toggleRide(){
     // ボタンを戻す
     const btn = document.getElementById('ride-main-btn');
     btn.classList.remove('is-on');
-    document.getElementById('ride-btn-icon').className = 'ti ti-send';
+    document.getElementById('ride-btn-svg').innerHTML = carSvg;
     document.getElementById('ride-btn-label').textContent = '実車［乗車位置・時間を記録］';
     document.getElementById('ride-status-chip').innerHTML =
       '<span class="ride-dot" style="background:var(--green)"></span><span>空車（乗客募集中）</span>';
