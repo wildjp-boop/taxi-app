@@ -231,34 +231,92 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
 .fchip{background:var(--bg3);border:1px solid var(--border2);border-radius:20px;font-size:11px;
   padding:4px 12px;cursor:pointer;color:var(--text2);white-space:nowrap;transition:all .15s;font-weight:500;}
 .fchip.active{background:rgba(30,144,255,0.15);border-color:var(--blue);color:var(--blue2);font-weight:700;}
-.sale-list{padding:10px 12px;display:flex;flex-direction:column;gap:7px;}
+.sale-list{padding:8px 10px;display:flex;flex-direction:column;gap:8px;}
+
+/* ===== NEW SALE CARD ===== */
 .sale-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
-  padding:12px 13px;position:relative;overflow:hidden;
-  transition:border-color .2s;animation:slideIn .18s ease;
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:var(--radius);
+  overflow:hidden;
+  animation:slideIn .18s ease;
 }
-@keyframes slideIn{from{opacity:0;transform:translateX(-6px);}to{opacity:1;transform:none;}}
-.sale-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;}
-.sale-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
-.sale-time{font-size:11px;color:var(--text3);margin-bottom:1px;}
-.sale-amt{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:700;color:var(--amber);}
-.sale-detail{text-align:right;font-size:10px;color:var(--text3);line-height:1.7;}
-.sale-badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px;}
-.sbadge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;}
-.sbadge-cat{background:rgba(30,144,255,0.12);color:var(--blue2);border:1px solid rgba(30,144,255,0.2);}
-.sbadge-pay{background:rgba(0,230,118,0.1);color:var(--green);border:1px solid rgba(0,230,118,0.2);}
-.sbadge-memo{background:rgba(245,166,35,0.1);color:var(--amber);border:1px solid rgba(245,166,35,0.2);}
-.sale-loc-row{font-size:10px;color:var(--text3);display:flex;align-items:center;gap:3px;margin-bottom:5px;}
-.sale-loc-row i{color:var(--cyan);font-size:11px;}
-.sale-acts{display:flex;gap:5px;padding-top:8px;border-top:1px solid var(--border);}
-.sale-act{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:7px;
-  font-size:11px;padding:5px;cursor:pointer;color:var(--text2);
-  display:flex;align-items:center;justify-content:center;gap:3px;transition:all .15s;}
-.sale-act:hover{border-color:var(--blue);color:var(--blue2);}
-.sale-act.del:hover{border-color:var(--red);color:var(--red);}
-.empty-state{text-align:center;padding:50px 20px;color:var(--text3);}
-.empty-state i{font-size:44px;display:block;margin-bottom:10px;opacity:.3;}
-.empty-state p{font-size:13px;line-height:1.8;}
+@keyframes slideIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* カードヘッダー */
+.sc-head{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:11px 13px 8px;
+}
+.sc-head-left{display:flex;align-items:center;gap:9px;}
+.sc-num{
+  width:30px;height:30px;border-radius:8px;
+  background:var(--bg3);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700;
+  color:var(--text2);flex-shrink:0;
+}
+.sc-time{
+  font-family:'Orbitron',sans-serif;font-size:16px;font-weight:700;color:var(--text);
+}
+.sc-head-right{text-align:right;}
+.sc-amt{
+  font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;color:var(--amber);
+  text-shadow:0 0 10px var(--amber-glow);
+}
+.sc-highway-badge{
+  display:inline-block;background:rgba(0,212,255,0.12);
+  border:1px solid rgba(0,212,255,0.25);border-radius:4px;
+  font-size:10px;font-weight:700;color:var(--cyan);
+  padding:1px 6px;margin-top:2px;
+}
+
+/* 位置情報行 */
+.sc-locs{padding:0 13px 8px;display:flex;flex-direction:column;gap:4px;}
+.sc-loc{display:flex;align-items:center;gap:7px;font-size:12px;}
+.sc-loc-dot{
+  width:10px;height:10px;border-radius:50%;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.2);
+}
+.sc-loc-addr{flex:1;color:var(--text2);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sc-loc-icon{
+  width:26px;height:26px;border-radius:7px;
+  background:var(--bg3);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;color:var(--text3);font-size:13px;cursor:pointer;
+  transition:all .15s;
+}
+.sc-loc-icon:hover{border-color:var(--cyan);color:var(--cyan);}
+
+/* 支払ボタン行 */
+.sc-pay-row{
+  display:flex;align-items:center;gap:6px;
+  padding:0 10px 10px;
+}
+.sc-pay-btn{
+  flex:1;background:linear-gradient(135deg,var(--amber),#e8960a);
+  color:#000;border:none;border-radius:8px;
+  font-size:13px;font-weight:900;padding:9px 10px;
+  text-align:center;letter-spacing:.3px;
+  box-shadow:0 3px 10px var(--amber-glow);
+}
+.sc-cat-tag{
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:8px;font-size:12px;font-weight:700;
+  padding:8px 12px;color:var(--text2);white-space:nowrap;
+}
+.sc-acts{
+  display:flex;border-top:1px solid var(--border);
+}
+.sc-act{
+  flex:1;background:transparent;border:none;
+  font-size:11px;padding:8px;cursor:pointer;
+  color:var(--text3);display:flex;align-items:center;justify-content:center;gap:4px;
+  transition:all .15s;border-right:1px solid var(--border);
+}
+.sc-act:last-child{border-right:none;}
+.sc-act:hover{color:var(--text);background:rgba(255,255,255,.03);}
+.sc-act.del:hover{color:var(--red);}
 .csv-btn{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
   padding:6px 12px;font-size:11px;cursor:pointer;color:var(--text2);
   display:flex;align-items:center;gap:4px;transition:all .2s;}
@@ -456,8 +514,28 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
   flex-shrink:0;
 }
 
-/* HEADER BTN update for SVG */
-.hbtn svg{display:block;}
+.garage-btn{
+  width:100%;background:rgba(0,230,118,0.07);
+  border:1px solid rgba(0,230,118,0.25);
+  border-radius:var(--radius-sm);
+  color:var(--green);font-size:13px;font-weight:700;
+  padding:10px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  transition:all .2s;
+}
+.garage-btn:hover{background:rgba(0,230,118,0.14);}
+.garage-btn:active{transform:scale(.97);}
+.ride-cnt-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.25);
+  border-radius:4px;font-size:10px;font-weight:700;
+  padding:1px 6px;color:var(--cyan);font-family:'Orbitron',sans-serif;
+}
+.report-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
+.report-row:last-child{border-bottom:none;}
+.report-row .k{font-size:12px;color:var(--text2);}
+.report-row .v{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700;color:var(--text);}
+.report-section{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-weight:700;padding:10px 0 4px;}
 
 /* ===== MODALS ===== */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);
@@ -720,6 +798,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
         </div>
       </div>
     </button>
+    <!-- 入庫ボタン -->
+    <button class="garage-btn" onclick="openGarageConfirm()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0">
+        <rect x="2" y="10" width="20" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M2 14h20M6 22v-4M10 22v-4M14 22v-4M18 22v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M6 10V6a6 6 0 0112 0v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      入庫（業務終了）
+    </button>
   </div>
 
   <!-- QUICK INPUT -->
@@ -776,8 +863,17 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
 <div class="screen" id="sc-history">
   <div class="sub-hdr">
     <div class="sub-hdr-top">
-      <span class="sub-title"><i class="ti ti-history" style="font-size:18px"></i>履歴</span>
-      <button class="csv-btn" onclick="exportCSV()"><i class="ti ti-download" style="font-size:13px"></i>CSV</button>
+      <span class="sub-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.8"/><line x1="7" y1="8" x2="17" y2="8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="7" y1="12" x2="17" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="7" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        履歴
+      </span>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <div style="display:flex;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;overflow:hidden;">
+          <button id="slim-btn" onclick="setListView('slim')" style="border:none;background:transparent;color:var(--text2);font-size:11px;font-weight:700;padding:5px 10px;cursor:pointer;transition:all .15s;">スリム</button>
+          <button id="detail-btn" onclick="setListView('detail')" style="border:none;background:var(--amber);color:#000;font-size:11px;font-weight:700;padding:5px 10px;cursor:pointer;transition:all .15s;">詳細</button>
+        </div>
+        <button class="csv-btn" onclick="exportCSV()"><i class="ti ti-download" style="font-size:13px"></i></button>
+      </div>
     </div>
     <div class="sub-sum">
       <div class="sum-chip"><div class="sum-v" id="l-tot" style="color:var(--amber)">¥0</div><div class="sum-l">総売上</div></div>
@@ -1090,6 +1186,30 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
   </div>
   <div style="flex:1;background:#000;display:flex;align-items:center;">
     <iframe id="cam-full-iframe" class="cam-full-iframe" src="" allowfullscreen allow="autoplay"></iframe>
+  </div>
+</div>
+
+<!-- GARAGE CONFIRM -->
+<div class="confirm-bg" id="garage-modal">
+  <div class="confirm-box">
+    <div class="confirm-icon">🏁</div>
+    <div class="confirm-title">入庫しますか？</div>
+    <div class="confirm-sub">本日の業務を終了して日報を表示します。</div>
+    <div class="confirm-btns">
+      <button class="confirm-btn" onclick="document.getElementById('garage-modal').classList.remove('open')">キャンセル</button>
+      <button class="confirm-btn" style="background:linear-gradient(135deg,#1a6b2a,#00e676);border-color:transparent;color:#000;font-weight:700;" onclick="doGarage()">入庫する</button>
+    </div>
+  </div>
+</div>
+
+<!-- DAILY REPORT MODAL -->
+<div class="modal-bg" id="report-modal">
+  <div class="modal">
+    <div class="modal-title">
+      <span style="display:flex;align-items:center;gap:7px;"><span style="font-size:20px">📋</span>日報</span>
+      <button class="modal-close" onclick="document.getElementById('report-modal').classList.remove('open')"><i class="ti ti-x"></i></button>
+    </div>
+    <div id="report-content"></div>
   </div>
 </div>
 
@@ -1408,6 +1528,15 @@ function filteredSales(){
   return sales.filter(s=>s.category===currentFilter||s.payment===currentFilter);
 }
 
+// ===== LIST VIEW MODE =====
+let listViewMode='detail';
+function setListView(mode){
+  listViewMode=mode;
+  document.getElementById('slim-btn').style.cssText=mode==='slim'?'border:none;background:var(--amber);color:#000;font-size:11px;font-weight:700;padding:5px 10px;cursor:pointer;':'border:none;background:transparent;color:var(--text2);font-size:11px;font-weight:700;padding:5px 10px;cursor:pointer;';
+  document.getElementById('detail-btn').style.cssText=mode==='detail'?'border:none;background:var(--amber);color:#000;font-size:11px;font-weight:700;padding:5px 10px;cursor:pointer;':'border:none;background:transparent;color:var(--text2);font-size:11px;font-weight:700;padding:5px 10px;cursor:pointer;';
+  renderList();
+}
+
 // ===== RENDER LIST =====
 function renderList(){
   const f=filteredSales();
@@ -1422,36 +1551,59 @@ function renderList(){
     return;
   }
   el.innerHTML=f.map(s=>{
-    const c=CAT_COLORS[s.category]||'#8ba3c7';
-    return `<div class="sale-card" style="border-left-color:${c};border-left-width:3px;">
-      <div class="sale-hdr">
-        <div><div class="sale-time">${s.date} ${s.time}</div><div class="sale-amt">${fmt(s.total)}</div></div>
-        <div class="sale-detail">運賃 ${fmt(s.fare)}${s.highway?'<br>高速 '+fmt(s.highway):''}${s.pickup?'<br>迎車 '+fmt(s.pickup):''}</div>
+    const cnt=getRideCount(sales,s.id,s.date);
+    const onMapUrl=s.onLat?`https://www.google.com/maps?q=${s.onLat},${s.onLng}`:null;
+    const offMapUrl=s.offLat?`https://www.google.com/maps?q=${s.offLat},${s.offLng}`:null;
+    const highwayBadge=s.highway?`<span class="sc-highway-badge">高速 ${fmt(s.highway)}</span>`:'';
+    const pickupBadge=s.pickup?`<span class="sc-highway-badge" style="color:var(--purple);border-color:rgba(179,136,255,.25);background:rgba(179,136,255,.1);">迎車 ${fmt(s.pickup)}</span>`:'';
+
+    if(listViewMode==='slim'){
+      return `<div class="sale-card">
+        <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;">
+          <div class="sc-num" style="font-size:12px;">${cnt||'-'}</div>
+          <div style="font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700;color:var(--text2);">${s.time}</div>
+          <div style="flex:1;"></div>
+          <div style="font-family:'Orbitron',sans-serif;font-size:16px;font-weight:900;color:var(--amber);">${fmt(s.total)}</div>
+          <div style="background:var(--amber);color:#000;border-radius:6px;font-size:11px;font-weight:700;padding:4px 8px;white-space:nowrap;">${s.payment}</div>
+          <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;font-size:11px;font-weight:600;padding:4px 8px;color:var(--text2);white-space:nowrap;">${s.category}</div>
+        </div>
+      </div>`;
+    }
+
+    return `<div class="sale-card">
+      <div class="sc-head">
+        <div class="sc-head-left">
+          <div class="sc-num">${cnt||'-'}</div>
+          <div class="sc-time">${s.time}</div>
+        </div>
+        <div class="sc-head-right">
+          <div class="sc-amt">${fmt(s.total)}</div>
+          <div style="display:flex;gap:3px;justify-content:flex-end;margin-top:2px;">
+            ${highwayBadge}${pickupBadge}
+            ${s.tip?`<span class="sc-highway-badge" style="color:var(--green);border-color:rgba(0,230,118,.25);background:rgba(0,230,118,.1);">チップ ${fmt(s.tip)}</span>`:''}
+          </div>
+        </div>
       </div>
-      <div class="sale-badges">
-        <span class="sbadge sbadge-cat">${s.category}</span>
-        <span class="sbadge sbadge-pay">${s.payment}</span>
-        ${s.memo?`<span class="sbadge sbadge-memo">${s.memo}</span>`:''}
+      <div class="sc-locs">
+        <div class="sc-loc">
+          <div class="sc-loc-dot" style="background:var(--green);border-color:rgba(0,230,118,.4);"></div>
+          <span class="sc-loc-addr">${s.onAddr||'乗車位置 未記録'}</span>
+          ${onMapUrl?`<a href="${onMapUrl}" target="_blank" class="sc-loc-icon"><i class="ti ti-map-pin" style="font-size:12px;color:var(--green)"></i></a>`:`<div class="sc-loc-icon"><i class="ti ti-user" style="font-size:12px"></i></div>`}
+        </div>
+        <div class="sc-loc">
+          <div class="sc-loc-dot" style="background:var(--red);border-color:rgba(255,71,87,.4);"></div>
+          <span class="sc-loc-addr">${s.offAddr||'降車位置 未記録'}</span>
+          ${offMapUrl?`<a href="${offMapUrl}" target="_blank" class="sc-loc-icon"><i class="ti ti-map-pin" style="font-size:12px;color:var(--red)"></i></a>`:`<div class="sc-loc-icon"><i class="ti ti-user" style="font-size:12px"></i></div>`}
+        </div>
       </div>
-      ${s.onAddr||s.offAddr ? `
-        <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:5px;">
-          ${s.onAddr?`<div class="sale-loc-row">
-            <i class="ti ti-map-pin" style="color:var(--green)"></i>
-            <span style="color:var(--green);font-weight:600;margin-right:3px;">乗車</span>${s.onAddr}
-            ${s.onLat?`<a href="https://www.google.com/maps?q=${s.onLat},${s.onLng}" target="_blank" style="color:var(--cyan);text-decoration:none;margin-left:4px;">地図▶</a>`:''}
-          </div>`:''}
-          ${s.offAddr?`<div class="sale-loc-row">
-            <i class="ti ti-map-pin" style="color:var(--red)"></i>
-            <span style="color:var(--red);font-weight:600;margin-right:3px;">降車</span>${s.offAddr}
-            ${s.offLat?`<a href="https://www.google.com/maps?q=${s.offLat},${s.offLng}" target="_blank" style="color:var(--cyan);text-decoration:none;margin-left:4px;">地図▶</a>`:''}
-          </div>`:''}
-        </div>` : s.addr ? `<div class="sale-loc-row"><i class="ti ti-map-pin"></i>${s.addr}
-            ${s.lat?`<a href="https://www.google.com/maps?q=${s.lat},${s.lng}" target="_blank" style="color:var(--cyan);text-decoration:none;margin-left:5px;">地図▶</a>`:''}
-          </div>` : ''
-      }
-      <div class="sale-acts">
-        <button class="sale-act" onclick="openEdit(${s.id})"><i class="ti ti-edit" style="font-size:12px"></i>編集</button>
-        <button class="sale-act del" onclick="openDelete(${s.id},${s.total})"><i class="ti ti-trash" style="font-size:12px"></i>削除</button>
+      <div class="sc-pay-row">
+        <div class="sc-pay-btn">${s.payment} ${fmt(s.fare)}</div>
+        <div class="sc-cat-tag">${s.category}</div>
+        ${s.memo?`<div class="sc-cat-tag" style="color:var(--amber);border-color:rgba(245,166,35,.25);background:rgba(245,166,35,.05);">${s.memo}</div>`:''}
+      </div>
+      <div class="sc-acts">
+        <button class="sc-act" onclick="openEdit(${s.id})"><i class="ti ti-edit" style="font-size:13px"></i>編集</button>
+        <button class="sc-act del" onclick="openDelete(${s.id},${s.total})"><i class="ti ti-trash" style="font-size:13px"></i>削除</button>
       </div>
     </div>`;
   }).join('');
@@ -1549,7 +1701,58 @@ function renderRanking(){
   `).join('');
 }
 
-// ===== ANALYTICS =====
+// ===== GARAGE / 入庫 =====
+function openGarageConfirm(){
+  document.getElementById('garage-modal').classList.add('open');
+}
+function doGarage(){
+  document.getElementById('garage-modal').classList.remove('open');
+  const today = todayStr();
+  const td = sales.filter(s=>s.date===today);
+  const total = td.reduce((a,s)=>a+s.total,0);
+  const avg = td.length ? Math.round(total/td.length) : 0;
+  const max = td.length ? Math.max(...td.map(s=>s.total)) : 0;
+  const min = td.length ? Math.min(...td.map(s=>s.total)) : 0;
+  const taxExcl = Math.round(total/(1+cfg.tax/100));
+  // 出庫〜入庫の時間
+  const [sh,sm] = cfg.startTime.split(':').map(Number);
+  const start = new Date(); start.setHours(sh,sm,0,0);
+  const diff = Math.max(0, new Date()-start);
+  const h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000);
+
+  // カテゴリ内訳
+  const catMap={};
+  td.forEach(s=>catMap[s.category]=(catMap[s.category]||0)+1);
+  const catRows = Object.entries(catMap).sort((a,b)=>b[1]-a[1])
+    .map(([k,v])=>`<div class="report-row"><span class="k">${k}</span><span class="v" style="color:var(--blue2)">${v}回</span></div>`).join('');
+
+  document.getElementById('report-content').innerHTML = `
+    <div style="text-align:center;padding:6px 0 12px;">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">${today} の売上</div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:36px;font-weight:900;color:var(--amber);text-shadow:0 0 20px var(--amber-glow);">${fmt(total)}</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:4px;">税抜 ${fmt(taxExcl)}</div>
+    </div>
+    <div class="report-section">業務サマリー</div>
+    <div class="report-row"><span class="k">乗車回数</span><span class="v" style="color:var(--cyan)">${td.length}回</span></div>
+    <div class="report-row"><span class="k">平均単価</span><span class="v">${fmt(avg)}</span></div>
+    <div class="report-row"><span class="k">最高単価</span><span class="v" style="color:var(--green)">${fmt(max)}</span></div>
+    <div class="report-row"><span class="k">最低単価</span><span class="v" style="color:var(--text2)">${fmt(min)}</span></div>
+    <div class="report-row"><span class="k">乗務時間</span><span class="v">${h}時間${m}分</span></div>
+    ${catRows ? `<div class="report-section">乗車区分</div>${catRows}` : ''}
+    <button onclick="document.getElementById('report-modal').classList.remove('open')" style="width:100%;margin-top:14px;background:linear-gradient(135deg,var(--amber),#e8960a);color:#000;border:none;border-radius:10px;font-size:14px;font-weight:700;padding:12px;cursor:pointer;">
+      お疲れ様でした！閉じる
+    </button>
+  `;
+  document.getElementById('report-modal').classList.add('open');
+}
+
+// ===== RIDE COUNT HELPER =====
+function getRideCount(sales, targetId, targetDate){
+  // 今日の売上を時系列順（古い順）に並べて何回目か返す
+  const todaySales = [...sales].filter(s=>s.date===targetDate).reverse();
+  const idx = todaySales.findIndex(s=>s.id===targetId);
+  return idx >= 0 ? idx+1 : null;
+}
 let analysisPeriod=7;
 function setPeriod(el){
   document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
