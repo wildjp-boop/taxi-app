@@ -798,15 +798,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
         </div>
       </div>
     </button>
-    <!-- 入庫ボタン -->
-    <button class="garage-btn" onclick="openGarageConfirm()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0">
-        <rect x="2" y="10" width="20" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/>
-        <path d="M2 14h20M6 22v-4M10 22v-4M14 22v-4M18 22v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-        <path d="M6 10V6a6 6 0 0112 0v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-      </svg>
-      入庫（業務終了）
-    </button>
   </div>
 
   <!-- QUICK INPUT -->
@@ -855,11 +846,18 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
       </div>
     </div>
   </div>
+  <!-- 入庫ボタン（最下部） -->
+  <button class="garage-btn" onclick="openGarageConfirm()" style="margin-bottom:4px;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0">
+      <rect x="2" y="10" width="20" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M2 14h20M6 22v-4M10 22v-4M14 22v-4M18 22v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M6 10V6a6 6 0 0112 0v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    入庫（業務終了）
+  </button>
 
 </div>
 </div>
-
-<!-- ===== HISTORY ===== -->
 <div class="screen" id="sc-history">
   <div class="sub-hdr">
     <div class="sub-hdr-top">
