@@ -514,7 +514,20 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
   flex-shrink:0;
 }
 
-.garage-btn{
+.odo-panel{
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:var(--radius);padding:12px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.odo-status-row{display:flex;align-items:center;gap:7px;}
+.odo-status-dot{width:9px;height:9px;border-radius:50%;background:var(--text3);flex-shrink:0;}
+.odo-status-text{font-size:12px;font-weight:700;color:var(--text2);flex:1;}
+.odo-dist{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--cyan);font-family:'Orbitron',sans-serif;font-weight:700;}
+.odo-meter-row{display:flex;align-items:center;justify-content:space-around;gap:8px;
+  background:var(--bg3);border-radius:var(--radius-sm);padding:10px 12px;}
+.odo-meter-item{text-align:center;}
+.odo-meter-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.odo-meter-val{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:700;color:var(--text);}
   width:100%;background:rgba(0,230,118,0.07);
   border:1px solid rgba(0,230,118,0.25);
   border-radius:var(--radius-sm);
@@ -846,15 +859,36 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
       </div>
     </div>
   </div>
-  <!-- 入庫ボタン（最下部） -->
-  <button class="garage-btn" onclick="openGarageConfirm()" style="margin-bottom:4px;">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0">
-      <rect x="2" y="10" width="20" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/>
-      <path d="M2 14h20M6 22v-4M10 22v-4M14 22v-4M18 22v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-      <path d="M6 10V6a6 6 0 0112 0v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-    </svg>
-    入庫（業務終了）
-  </button>
+  <!-- 出庫/入庫ボタン（最下部） -->
+  <div class="odo-panel" id="odo-panel">
+    <div class="odo-status-row">
+      <div class="odo-status-dot" id="odo-dot"></div>
+      <span class="odo-status-text" id="odo-status-text">出庫前</span>
+      <div class="odo-dist" id="odo-dist" style="display:none;">
+        <i class="ti ti-road" style="font-size:12px;color:var(--cyan)"></i>
+        <span id="odo-dist-val">-- km</span>走行
+      </div>
+    </div>
+    <div class="odo-meter-row" id="odo-meter-row">
+      <div class="odo-meter-item" id="odo-start-item" style="opacity:.4;">
+        <div class="odo-meter-label">出庫時ODO</div>
+        <div class="odo-meter-val" id="odo-start-val">-- km</div>
+      </div>
+      <div style="font-size:18px;color:var(--text3);">→</div>
+      <div class="odo-meter-item" id="odo-end-item" style="opacity:.4;">
+        <div class="odo-meter-label">入庫時ODO</div>
+        <div class="odo-meter-val" id="odo-end-val">-- km</div>
+      </div>
+    </div>
+    <button class="garage-btn" id="odo-main-btn" onclick="openOdoModal()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0">
+        <rect x="2" y="10" width="20" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M2 14h20M6 22v-4M10 22v-4M14 22v-4M18 22v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M6 10V6a6 6 0 0112 0v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <span id="odo-btn-label">出庫（ODOメーターを記録）</span>
+    </button>
+  </div>
 
 </div>
 </div>
@@ -1187,6 +1221,30 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
   </div>
 </div>
 
+<!-- ODO METER MODAL -->
+<div class="modal-bg" id="odo-modal">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="odo-modal-title" style="display:flex;align-items:center;gap:7px;"><span style="font-size:20px">🚗</span>ODOメーター記録</span>
+      <button class="modal-close" onclick="closeOdoModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:12px;color:var(--text3);margin-bottom:8px;" id="odo-modal-desc">出庫時のODOメーター（総走行距離）を入力してください</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="number" id="odo-input" min="0" placeholder="例: 123456"
+          style="flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+          color:var(--amber);font-size:22px;font-weight:700;padding:12px 14px;outline:none;
+          font-family:'Orbitron',sans-serif;text-align:right;transition:border-color .2s;"
+          onfocus="this.style.borderColor='var(--amber)'" onblur="this.style.borderColor='var(--border2)'">
+        <span style="font-size:16px;font-weight:700;color:var(--text2);">km</span>
+      </div>
+    </div>
+    <button class="modal-save" id="odo-modal-btn" onclick="saveOdo()" style="background:linear-gradient(135deg,var(--green),#00a844);color:#000;">
+      記録して出庫する
+    </button>
+  </div>
+</div>
+
 <!-- GARAGE CONFIRM -->
 <div class="confirm-bg" id="garage-modal">
   <div class="confirm-box">
@@ -1225,6 +1283,107 @@ let sales=[], cfg={monthly:800000,days:5,tax:10,closeDay:20,startTime:'15:00'};
 let deleteId=null, currentFilter='all', analyticsDays=7, rankTab='today';
 let camStream=null, capturedImage=null, currentPos=null;
 let rideOnPos=null, rideOffPos=null, isRiding=false, rideOnTime=null, rideTimerInterval=null, isAcquiring=false;
+let isDeparted=false, odoStart=null, odoEnd=null;
+
+// ===== ODO METER =====
+function openOdoModal(){
+  if(!isDeparted){
+    // 出庫モード
+    document.getElementById('odo-modal-title').innerHTML='<span style="font-size:20px">🚗</span>出庫 ODOメーター';
+    document.getElementById('odo-modal-desc').textContent='出庫時のODOメーター（総走行距離）を入力してください';
+    document.getElementById('odo-modal-btn').textContent='記録して出庫する';
+    document.getElementById('odo-modal-btn').style.background='linear-gradient(135deg,var(--green),#00a844)';
+    document.getElementById('odo-input').value='';
+  } else {
+    // 入庫モード
+    document.getElementById('odo-modal-title').innerHTML='<span style="font-size:20px">🏁</span>入庫 ODOメーター';
+    document.getElementById('odo-modal-desc').textContent='入庫時のODOメーター（総走行距離）を入力してください';
+    document.getElementById('odo-modal-btn').textContent='記録して入庫する';
+    document.getElementById('odo-modal-btn').style.background='linear-gradient(135deg,#cc1122,#ff4757)';
+    document.getElementById('odo-input').value='';
+  }
+  document.getElementById('odo-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('odo-input').focus(),300);
+}
+
+function closeOdoModal(){
+  document.getElementById('odo-modal').classList.remove('open');
+}
+
+function saveOdo(){
+  const val=parseInt(document.getElementById('odo-input').value);
+  if(!val||val<=0){showToast('ODOメーターを入力してください','ng');return;}
+
+  if(!isDeparted){
+    // 出庫
+    odoStart=val;
+    isDeparted=true;
+    closeOdoModal();
+    updateOdoPanel();
+    showToast('🚗 出庫しました！ODO: '+val.toLocaleString()+' km','ok');
+    // 出庫時刻を更新
+    cfg.startTime = pad(new Date().getHours())+':'+pad(new Date().getMinutes());
+    saveCfg(); updateHome();
+  } else {
+    // 入庫
+    odoEnd=val;
+    closeOdoModal();
+    updateOdoPanel();
+    // 走行距離計算
+    const dist = odoEnd - odoStart;
+    if(dist<0){showToast('ODOが出庫時より小さい値です','ng');return;}
+    showToast('🏁 入庫！走行距離: '+dist.toLocaleString()+' km','ok');
+    openGarageConfirm();
+  }
+}
+
+function updateOdoPanel(){
+  const dot=document.getElementById('odo-dot');
+  const txt=document.getElementById('odo-status-text');
+  const btn=document.getElementById('odo-btn-label');
+  const distEl=document.getElementById('odo-dist');
+  const startItem=document.getElementById('odo-start-item');
+  const endItem=document.getElementById('odo-end-item');
+
+  if(!isDeparted){
+    dot.style.background='var(--text3)';
+    txt.textContent='出庫前';
+    btn.textContent='出庫（ODOメーターを記録）';
+    document.getElementById('garage-btn') && (document.getElementById('garage-btn').style.borderColor='');
+    startItem.style.opacity='.4';
+    endItem.style.opacity='.4';
+    document.getElementById('odo-start-val').textContent='-- km';
+    document.getElementById('odo-end-val').textContent='-- km';
+    distEl.style.display='none';
+  } else if(isDeparted && odoEnd===null){
+    dot.style.background='var(--green)';dot.style.boxShadow='0 0 6px var(--green)';
+    txt.textContent='乗務中';
+    btn.textContent='入庫（ODOメーターを記録）';
+    document.getElementById('odo-main-btn').style.borderColor='rgba(255,71,87,.4)';
+    document.getElementById('odo-main-btn').style.color='var(--red)';
+    startItem.style.opacity='1';
+    endItem.style.opacity='.4';
+    document.getElementById('odo-start-val').textContent=(odoStart||0).toLocaleString()+' km';
+    distEl.style.display='none';
+  } else {
+    dot.style.background='var(--text3)';dot.style.boxShadow='';
+    txt.textContent='入庫済み';
+    btn.textContent='出庫（ODOメーターを記録）';
+    document.getElementById('odo-main-btn').style.borderColor='';
+    document.getElementById('odo-main-btn').style.color='var(--green)';
+    startItem.style.opacity='1';
+    endItem.style.opacity='1';
+    document.getElementById('odo-start-val').textContent=(odoStart||0).toLocaleString()+' km';
+    document.getElementById('odo-end-val').textContent=(odoEnd||0).toLocaleString()+' km';
+    const dist=(odoEnd||0)-(odoStart||0);
+    if(dist>=0){
+      document.getElementById('odo-dist-val').textContent=dist.toLocaleString()+' km';
+      distEl.style.display='flex';
+    }
+    // リセット（次の出庫に備える）
+    isDeparted=false; odoStart=null; odoEnd=null;
+  }
+}
 
 // ===== INIT =====
 function load(){
@@ -1736,6 +1895,9 @@ function doGarage(){
     <div class="report-row"><span class="k">最高単価</span><span class="v" style="color:var(--green)">${fmt(max)}</span></div>
     <div class="report-row"><span class="k">最低単価</span><span class="v" style="color:var(--text2)">${fmt(min)}</span></div>
     <div class="report-row"><span class="k">乗務時間</span><span class="v">${h}時間${m}分</span></div>
+    ${odoStart?`<div class="report-row"><span class="k">出庫ODO</span><span class="v">${odoStart.toLocaleString()} km</span></div>`:''}
+    ${odoEnd?`<div class="report-row"><span class="k">入庫ODO</span><span class="v">${odoEnd.toLocaleString()} km</span></div>`:''}
+    ${odoStart&&odoEnd?`<div class="report-row"><span class="k">走行距離</span><span class="v" style="color:var(--cyan)">${(odoEnd-odoStart).toLocaleString()} km</span></div>`:''}
     ${catRows ? `<div class="report-section">乗車区分</div>${catRows}` : ''}
     <button onclick="document.getElementById('report-modal').classList.remove('open')" style="width:100%;margin-top:14px;background:linear-gradient(135deg,var(--amber),#e8960a);color:#000;border:none;border-radius:10px;font-size:14px;font-weight:700;padding:12px;cursor:pointer;">
       お疲れ様でした！閉じる
