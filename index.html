@@ -13,25 +13,25 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
-  --bg:#0A0E14;--bg2:#0f1520;--bg3:#141d2e;--bg4:#1a2540;
-  --border:#1e2d45;--border2:#243356;
-  --text:#e8f0fe;--text2:#7a99c8;--text3:#3d5580;
-  --blue:#1e90ff;--blue2:#4db8ff;--blue-glow:rgba(30,144,255,0.3);
-  --amber:#f5a623;--amber2:#ffd166;--amber-glow:rgba(245,166,35,0.25);
-  --cyan:#00d4ff;--cyan-glow:rgba(0,212,255,0.2);
-  --green:#00e676;--green-glow:rgba(0,230,118,0.2);
-  --red:#ff4757;--red-glow:rgba(255,71,87,0.2);
+  --bg:#0f1115;--bg2:#16191f;--bg3:#1e2228;--bg4:#252b35;
+  --border:#2a3040;--border2:#343d50;
+  --text:#e8eaed;--text2:#9aa0ac;--text3:#5f6368;
+  --blue:#4285f4;--blue2:#7baaf7;--blue-glow:rgba(66,133,244,0.3);
+  --amber:#fbbc04;--amber2:#fdd663;--amber-glow:rgba(251,188,4,0.25);
+  --cyan:#4285f4;--cyan-glow:rgba(66,133,244,0.2);
+  --green:#34a853;--green-glow:rgba(52,168,83,0.2);
+  --red:#ea4335;--red-glow:rgba(234,67,53,0.2);
   --purple:#9b59ff;--purple-glow:rgba(155,89,255,0.25);
-  --orange:#ff6b35;--orange-glow:rgba(255,107,53,0.25);
-  --neon-border:rgba(30,144,255,0.6);
+  --orange:#ff6d00;--orange-glow:rgba(255,109,0,0.25);
+  --neon-border:rgba(66,133,244,0.5);
   --radius:14px;--radius-sm:10px;
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;overflow:hidden;}
 .app{max-width:430px;margin:0 auto;height:100vh;height:100dvh;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden;}
 
-/* NEON GLOW BG */
+/* GOOGLE BG */
 .app::before{content:'';position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;height:100%;
-  background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(30,144,255,0.06) 0%,transparent 70%);pointer-events:none;z-index:0;}
+  background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(66,133,244,0.05) 0%,transparent 70%);pointer-events:none;z-index:0;}
 
 /* ===== HEADER ===== */
 .header{
@@ -92,15 +92,65 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
 
 /* ===== HOME SCREEN ===== */
-.home-content{padding:12px;display:flex;flex-direction:column;gap:10px;}
+.home-content{padding:7px 10px;display:flex;flex-direction:column;gap:7px;}
+
+/* RIDE PANEL COMPACT */
+.ride-panel{
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:var(--radius);padding:9px 11px;
+  display:flex;flex-direction:column;gap:6px;
+}
+.ride-panel-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px;}
+.ride-status-chip{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);font-weight:600;}
+.ride-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.ride-panel-desc{font-size:11px;color:var(--text3);line-height:1.5;}
+.ride-elapsed{
+  display:flex;align-items:center;gap:5px;flex-wrap:wrap;
+  background:rgba(251,188,4,0.07);border:1px solid rgba(251,188,4,0.2);
+  border-radius:7px;padding:5px 9px;
+}
+.ride-main-btn{
+  width:100%;border:none;border-radius:var(--radius-sm);
+  padding:0;cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .15s;background:transparent;
+}
+.ride-btn-bg{
+  padding:11px 12px;
+  background:linear-gradient(135deg,#c94400,#f04800,#fbbc04);
+  border-radius:var(--radius-sm);
+  box-shadow:0 5px 18px rgba(240,72,0,.4),inset 0 1px 0 rgba(255,255,255,.2);
+  transition:all .2s;
+}
+.ride-main-btn.is-on .ride-btn-bg{
+  background:linear-gradient(135deg,#8b0000,#cc1122,#ea4335);
+  box-shadow:0 5px 18px rgba(234,67,53,.45),inset 0 1px 0 rgba(255,255,255,.15);
+  animation:pulse-btn 1.8s infinite;
+}
+@keyframes pulse-btn{
+  0%,100%{box-shadow:0 5px 18px rgba(234,67,53,.45),inset 0 1px 0 rgba(255,255,255,.15);}
+  50%{box-shadow:0 7px 28px rgba(234,67,53,.75),inset 0 1px 0 rgba(255,255,255,.15);}
+}
+.ride-main-btn:active{transform:scale(.97);}
+.ride-btn-inner{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  font-size:14px;font-weight:900;color:#fff;
+  font-family:'Noto Sans JP',sans-serif;letter-spacing:.3px;
+  text-shadow:0 1px 4px rgba(0,0,0,.35);position:relative;z-index:1;
+}
+.ride-btn-icon-wrap{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(0,0,0,.2);
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,.2);flex-shrink:0;
+}
 
 /* MAIN SALES CARD */
 .sales-card{
   background:var(--bg2);
-  border:1.5px solid var(--neon-border);
-  border-radius:var(--radius);padding:16px;
+  border:1.5px solid rgba(66,133,244,0.35);
+  border-radius:var(--radius);padding:11px 13px;
   position:relative;overflow:hidden;
-  box-shadow:0 0 20px var(--blue-glow),inset 0 0 30px rgba(30,144,255,0.03);
+  box-shadow:0 0 20px rgba(66,133,244,0.08),inset 0 0 30px rgba(66,133,244,0.02);
 }
 .sales-card::before{
   content:'';position:absolute;inset:-1px;border-radius:var(--radius);
@@ -117,7 +167,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
 .sales-amount{
   font-family:'Orbitron',sans-serif;font-size:44px;font-weight:900;
   color:var(--amber);line-height:1;margin-bottom:6px;
-  text-shadow:0 0 30px var(--amber-glow),0 0 60px rgba(245,166,35,0.15);
+  text-shadow:0 0 30px rgba(251,188,4,0.3),0 0 60px rgba(251,188,4,0.1);
   letter-spacing:-1px;
 }
 .sales-amount span{font-size:30px;}
@@ -128,12 +178,19 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
 
 /* REQUIRED BOX */
 .required-box{
-  background:rgba(30,144,255,0.06);
-  border:1px solid rgba(30,144,255,0.3);
-  border-radius:var(--radius-sm);padding:12px 14px;
-  display:flex;align-items:center;margin-bottom:14px;
-  box-shadow:0 0 12px rgba(30,144,255,0.1);
+  background:rgba(66,133,244,0.06);
+  border:1px solid rgba(66,133,244,0.25);
+  border-radius:var(--radius-sm);padding:8px 11px;
+  display:flex;align-items:center;margin-bottom:10px;
+  box-shadow:0 0 10px rgba(66,133,244,0.07);
 }
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;}
+.stat-chip{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 5px;text-align:center;}
+.stat-chip-val{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--amber);line-height:1;margin-bottom:2px;}
+.stat-chip-label{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.3px;}
+.quick-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:10px 11px;}
+.quick-title{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-bottom:8px;}
 .required-left{flex:1;}
 .required-label{font-size:11px;color:var(--text3);margin-bottom:3px;}
 .required-amount{font-family:'Orbitron',sans-serif;font-size:24px;font-weight:700;color:var(--text);}
@@ -146,8 +203,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
 /* PROGRESS */
 .prog-wrap{margin-bottom:8px;}
 .prog-track{height:10px;background:var(--bg4);border-radius:5px;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.5);}
-.prog-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,#1e90ff,#4db8ff);
-  transition:width 1.2s cubic-bezier(.4,0,.2,1);box-shadow:0 0 10px var(--blue-glow);}
+.prog-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,#4285f4,#7baaf7);
+  transition:width 1.2s cubic-bezier(.4,0,.2,1);box-shadow:0 0 10px rgba(66,133,244,0.4);}
 .prog-labels{display:flex;justify-content:space-between;font-size:11px;margin-top:5px;}
 .prog-pct{color:var(--text2);font-weight:600;}
 .prog-goal{color:var(--text3);}
@@ -166,14 +223,47 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
   transition:border-color .2s,box-shadow .2s;
 }
 .quick-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-glow);}
-.tag-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
+.tag-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px;}
+.sec-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;font-weight:700;}
+.save-bar{display:flex;gap:6px;}
+.quick-fare-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:5px;margin-bottom:8px;}
+.qfare-btn{
+  background:rgba(66,133,244,0.1);border:1px solid rgba(66,133,244,0.3);
+  border-radius:7px;color:var(--blue2);font-size:11px;font-weight:700;
+  padding:7px 3px;cursor:pointer;transition:all .15s;
+  font-family:'Orbitron',sans-serif;letter-spacing:-.5px;
+}
+.qfare-btn:active{transform:scale(.93);background:rgba(66,133,244,0.25);}
+.qfare-reset{background:rgba(234,67,53,0.1);border-color:rgba(234,67,53,0.3);color:var(--red);font-size:12px;min-width:32px;}
 .qtag{
   background:var(--bg3);border:1px solid var(--border2);
-  border-radius:20px;font-size:11px;padding:4px 12px;
-  cursor:pointer;color:var(--text2);transition:all .15s;font-weight:500;
+  border-radius:20px;font-size:11px;padding:5px 13px;
+  cursor:pointer;color:var(--text2);transition:all .18s;font-weight:600;
   user-select:none;
 }
-.qtag.active{background:rgba(30,144,255,0.15);border-color:var(--blue);color:var(--blue2);font-weight:700;}
+/* 乗車区分カラー */
+.qtag.active[data-val="流し"]{background:rgba(52,168,83,0.18);border-color:#34a853;color:#34a853;}
+.qtag.active[data-val="待機"]{background:rgba(251,188,4,0.18);border-color:#fbbc04;color:#fbbc04;}
+.qtag.active[data-val="アプリ"]{background:rgba(66,133,244,0.18);border-color:#4285f4;color:#7baaf7;}
+.qtag.active[data-val="予約"]{background:rgba(155,89,255,0.18);border-color:#9b59ff;color:#c39aff;}
+.qtag.active[data-val="無線"]{background:rgba(234,67,53,0.18);border-color:#ea4335;color:#f28b82;}
+/* 支払方法カラー */
+.qtag.active[data-val="現金"]{background:rgba(52,168,83,0.18);border-color:#34a853;color:#34a853;}
+.qtag.active[data-val="クレカ"]{background:rgba(66,133,244,0.18);border-color:#4285f4;color:#7baaf7;}
+.qtag.active[data-val="アプリ決済"]{background:rgba(251,188,4,0.18);border-color:#fbbc04;color:#fbbc04;}
+.qtag.active[data-val="タクチケ"]{background:rgba(234,67,53,0.18);border-color:#ea4335;color:#f28b82;}
+.qtag.active[data-val="電子マネー"]{background:rgba(155,89,255,0.18);border-color:#9b59ff;color:#c39aff;}
+/* 編集モーダル同色 */
+#e-cat .qtag.active[data-val="流し"]{background:rgba(52,168,83,0.18);border-color:#34a853;color:#34a853;}
+#e-cat .qtag.active[data-val="待機"]{background:rgba(251,188,4,0.18);border-color:#fbbc04;color:#fbbc04;}
+#e-cat .qtag.active[data-val="アプリ"]{background:rgba(66,133,244,0.18);border-color:#4285f4;color:#7baaf7;}
+#e-cat .qtag.active[data-val="予約"]{background:rgba(155,89,255,0.18);border-color:#9b59ff;color:#c39aff;}
+#e-cat .qtag.active[data-val="無線"]{background:rgba(234,67,53,0.18);border-color:#ea4335;color:#f28b82;}
+#e-pay .qtag.active[data-val="現金"]{background:rgba(52,168,83,0.18);border-color:#34a853;color:#34a853;}
+#e-pay .qtag.active[data-val="クレカ"]{background:rgba(66,133,244,0.18);border-color:#4285f4;color:#7baaf7;}
+#e-pay .qtag.active[data-val="アプリ決済"]{background:rgba(251,188,4,0.18);border-color:#fbbc04;color:#fbbc04;}
+#e-pay .qtag.active[data-val="タクチケ"]{background:rgba(234,67,53,0.18);border-color:#ea4335;color:#f28b82;}
+#e-pay .qtag.active[data-val="電子マネー"]{background:rgba(155,89,255,0.18);border-color:#9b59ff;color:#c39aff;}
 .save-bar{display:flex;gap:7px;}
 .quick-fare-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:6px;margin-bottom:10px;}
 .qfare-btn{
@@ -322,7 +412,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
   display:flex;align-items:center;gap:4px;transition:all .2s;}
 .csv-btn:hover{border-color:var(--green);color:var(--green);}
 
-/* RIDE PANEL */
+/* MASK */
+.maskable{transition:filter .2s,letter-spacing .2s;}
+.masked .maskable{filter:blur(6px);letter-spacing:2px;user-select:none;}
 .ride-panel{
   background:var(--bg2);border:1px solid var(--border2);
   border-radius:var(--radius);padding:14px;
@@ -395,37 +487,63 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
   border-radius:4px;font-size:9px;padding:1px 5px;color:var(--amber);font-weight:700;margin-left:4px;}
 
 /* ===== ANALYTICS SCREEN ===== */
-.analytics-content{padding:12px;display:flex;flex-direction:column;gap:10px;}
-.an-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;}
-.an-title{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;
-  font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:5px;}
-.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
-.kpi-chip{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:11px 10px;text-align:center;}
-.kpi-v{font-family:'Orbitron',sans-serif;font-size:17px;font-weight:700;margin-bottom:2px;}
-.kpi-l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
-.bar-chart{display:flex;align-items:flex-end;gap:4px;height:90px;margin-bottom:6px;}
-.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;}
-.bar-val-label{font-size:7px;color:var(--text3);height:12px;display:flex;align-items:flex-end;}
-.bar-fill{width:100%;border-radius:3px 3px 0 0;transition:height .8s ease;min-height:3px;}
-.bar-day-label{font-size:8px;color:var(--text3);}
-.breakdown-row{display:flex;flex-direction:column;gap:5px;}
-.bd-item{display:flex;flex-direction:column;gap:2px;}
-.bd-labels{display:flex;justify-content:space-between;font-size:11px;}
-.bd-name{color:var(--text2);}
-.bd-pct{font-weight:700;}
-.bd-bar{height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;}
-.bd-fill{height:100%;border-radius:2px;transition:width .8s ease;}
-.period-btns{display:flex;gap:5px;margin-left:auto;}
-.pbtn{background:var(--bg3);border:1px solid var(--border2);border-radius:6px;
-  font-size:10px;padding:3px 8px;cursor:pointer;color:var(--text2);transition:all .15s;}
-.pbtn.active{background:rgba(30,144,255,0.15);border-color:var(--blue);color:var(--blue2);font-weight:700;}
-.trophy-list{display:flex;flex-direction:column;gap:0;}
-.trophy-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);}
-.trophy-item:last-child{border-bottom:none;}
-.trophy-medal{font-size:18px;width:24px;}
-.trophy-info{flex:1;}
-.trophy-date{font-size:10px;color:var(--text3);}
-.trophy-amt{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;color:var(--amber);}
+.analytics-content{padding:8px 10px 16px;display:flex;flex-direction:column;gap:8px;}
+.sale-list{padding:7px 10px;display:flex;flex-direction:column;gap:7px;}
+.sc-head{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 11px 6px;}
+.sc-locs{padding:0 11px 6px;display:flex;flex-direction:column;gap:3px;}
+.sc-pay-row{display:flex;align-items:center;gap:5px;padding:0 9px 8px;}
+.sc-acts{display:flex;border-top:1px solid var(--border);}
+.sc-act{flex:1;background:transparent;border:none;font-size:11px;padding:7px;cursor:pointer;color:var(--text3);display:flex;align-items:center;justify-content:center;gap:3px;transition:all .15s;border-right:1px solid var(--border);}
+.sc-act:last-child{border-right:none;}
+.ride-cnt-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(66,133,244,0.12);border:1px solid rgba(66,133,244,0.25);border-radius:4px;font-size:10px;font-weight:700;padding:1px 5px;color:var(--blue2);font-family:'Orbitron',sans-serif;}
+#ride-status{margin-top:6px;display:flex;flex-direction:column;gap:3px;}
+.an-tab-bar{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;}
+.an-tab{padding:10px 4px;text-align:center;font-size:12px;font-weight:700;color:var(--text3);cursor:pointer;transition:all .18s;}
+.an-tab.active{background:var(--amber);color:#000;}
+.an-selector-row{display:flex;gap:8px;}
+.an-select{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-weight:700;padding:8px 10px;outline:none;font-family:'Orbitron',sans-serif;cursor:pointer;}
+.an-main-card{background:var(--bg2);border:1.5px solid rgba(245,166,35,0.4);border-radius:var(--radius);padding:18px 16px;text-align:center;box-shadow:0 0 20px rgba(245,166,35,0.08);}
+.an-period-label{font-size:20px;font-weight:900;color:var(--text);margin-bottom:2px;font-family:'Orbitron',sans-serif;}
+.an-period-range{font-size:11px;color:var(--text3);margin-bottom:12px;}
+.an-income-label{font-size:11px;color:var(--text2);margin-bottom:4px;}
+.an-income{font-family:'Orbitron',sans-serif;font-size:38px;font-weight:900;color:var(--amber);text-shadow:0 0 24px var(--amber-glow);letter-spacing:-1px;margin-bottom:6px;}
+.an-tax-row{display:inline-flex;align-items:center;gap:8px;background:var(--bg3);border-radius:20px;padding:4px 12px;margin-bottom:14px;}
+.an-tax-badge{font-size:10px;color:var(--text3);}
+.an-tax-val{font-family:'Orbitron',sans-serif;font-size:14px;color:var(--text2);font-weight:700;}
+.an-meta-row{display:flex;gap:8px;margin-top:4px;}
+.an-meta-chip{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 8px;text-align:center;}
+.an-meta-val{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700;color:var(--text);}
+.an-meta-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.an-goal-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:8px 12px;background:rgba(0,230,118,0.06);border:1px solid rgba(0,230,118,0.2);border-radius:var(--radius-sm);}
+.an-goal-label{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:5px;}
+.an-goal-val{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;color:var(--green);}
+/* 日別一覧 */
+.an-day-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:6px;}
+.an-day-header{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;}
+.an-day-num{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:700;color:var(--text2);min-width:32px;}
+.an-day-date{font-size:11px;color:var(--text3);flex:1;}
+.an-day-cnt{font-size:11px;color:var(--cyan);margin-right:4px;}
+.an-day-amt{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:700;color:var(--amber);}
+.an-day-chevron{font-size:12px;color:var(--text3);transition:transform .2s;margin-left:4px;}
+.an-day-rides{display:none;border-top:1px solid var(--border);padding:6px 8px;flex-direction:column;gap:4px;}
+.an-day-rides.open{display:flex;}
+.an-ride-row{display:flex;align-items:center;gap:6px;padding:5px 6px;background:var(--bg3);border-radius:7px;}
+.an-ride-time{font-family:'Orbitron',sans-serif;font-size:11px;color:var(--text2);min-width:38px;}
+.an-ride-pay{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;background:var(--amber);color:#000;}
+.an-ride-cat{font-size:10px;color:var(--text3);}
+.an-ride-amt{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;color:var(--text);margin-left:auto;}
+/* 年間実績 */
+.an-month-row{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:6px;}
+.an-month-label{font-size:13px;font-weight:700;color:var(--text2);min-width:44px;}
+.an-month-bar-wrap{flex:1;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;}
+.an-month-bar{height:100%;background:linear-gradient(90deg,var(--amber),var(--amber2));border-radius:3px;}
+.an-month-amt{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;color:var(--amber);min-width:72px;text-align:right;}
+.an-month-cnt{font-size:10px;color:var(--text3);min-width:28px;text-align:right;}
+/* 年度別 */
+.an-fiscal-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:8px;}
+.an-fiscal-year{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.an-fiscal-total{font-family:'Orbitron',sans-serif;font-size:26px;font-weight:900;color:var(--amber);}
+.an-fiscal-sub{font-size:11px;color:var(--text3);margin-top:2px;}
 
 /* ===== SETTINGS SCREEN ===== */
 .settings-content{padding:12px;display:flex;flex-direction:column;gap:10px;}
@@ -461,12 +579,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
   padding:9px 0 7px;cursor:pointer;gap:2px;transition:all .15s;}
 .nav-item i{font-size:22px;color:var(--text3);transition:all .15s;}
 .nav-item span{font-size:9px;color:var(--text3);transition:all .15s;font-weight:600;}
-.nav-item.active i,.nav-item.active span{color:var(--amber);}
+.nav-item.active i,.nav-item.active span{color:var(--blue);}
 .nav-svg{color:var(--text3);transition:all .2s;}
-.nav-item.active .nav-svg{color:var(--amber);filter:drop-shadow(0 0 4px rgba(245,166,35,.6));}
+.nav-item.active .nav-svg{color:var(--blue);filter:drop-shadow(0 0 4px rgba(66,133,244,.6));}
 .nav-item.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
-  width:32px;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent);
-  border-radius:0 0 3px 3px;box-shadow:0 0 8px var(--amber-glow);}
+  width:32px;height:2px;background:linear-gradient(90deg,transparent,var(--blue),transparent);
+  border-radius:0 0 3px 3px;box-shadow:0 0 8px var(--blue-glow);}
 .nav-item{position:relative;}
 
 /* RIDE BUTTON REDESIGN */
@@ -514,34 +632,18 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
   flex-shrink:0;
 }
 
-.odo-panel{
-  background:var(--bg2);border:1px solid var(--border2);
-  border-radius:var(--radius);padding:12px;
-  display:flex;flex-direction:column;gap:10px;
-}
+.odo-panel{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:9px 11px;display:flex;flex-direction:column;gap:7px;}
 .odo-status-row{display:flex;align-items:center;gap:7px;}
 .odo-status-dot{width:9px;height:9px;border-radius:50%;background:var(--text3);flex-shrink:0;}
 .odo-status-text{font-size:12px;font-weight:700;color:var(--text2);flex:1;}
-.odo-dist{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--cyan);font-family:'Orbitron',sans-serif;font-weight:700;}
-.odo-meter-row{display:flex;align-items:center;justify-content:space-around;gap:8px;
-  background:var(--bg3);border-radius:var(--radius-sm);padding:10px 12px;}
+.odo-dist{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--blue2);font-family:'Orbitron',sans-serif;font-weight:700;}
+.odo-meter-row{display:flex;align-items:center;justify-content:space-around;gap:8px;background:var(--bg3);border-radius:var(--radius-sm);padding:7px 10px;}
 .odo-meter-item{text-align:center;}
-.odo-meter-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
-.odo-meter-val{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:700;color:var(--text);}
-  width:100%;background:rgba(0,230,118,0.07);
-  border:1px solid rgba(0,230,118,0.25);
-  border-radius:var(--radius-sm);
-  color:var(--green);font-size:13px;font-weight:700;
-  padding:10px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  transition:all .2s;
-}
-.garage-btn:hover{background:rgba(0,230,118,0.14);}
+.odo-meter-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;}
+.odo-meter-val{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:700;color:var(--text);}
+.garage-btn{width:100%;background:rgba(52,168,83,0.07);border:1px solid rgba(52,168,83,0.25);border-radius:var(--radius-sm);color:var(--green);font-size:12px;font-weight:700;padding:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;}
+.garage-btn:hover{background:rgba(52,168,83,0.14);}
 .garage-btn:active{transform:scale(.97);}
-.ride-cnt-badge{
-  display:inline-flex;align-items:center;gap:3px;
-  background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.25);
-  border-radius:4px;font-size:10px;font-weight:700;
   padding:1px 6px;color:var(--cyan);font-family:'Orbitron',sans-serif;
 }
 .report-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
@@ -670,21 +772,21 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
 <div class="header">
   <div class="header-row1">
     <div class="logo-area">
-      <div class="logo-icon" style="background:linear-gradient(135deg,#1a2a4a,#0d1a30);border:1px solid rgba(245,166,35,0.4);box-shadow:0 0 12px rgba(245,166,35,0.2);">
+      <div class="logo-icon" style="background:linear-gradient(135deg,#1a2540,#0f1623);border:1px solid rgba(66,133,244,0.4);box-shadow:0 0 12px rgba(66,133,244,0.2);">
         <svg width="28" height="22" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="3" y="8" width="22" height="11" rx="3" fill="#f5a623"/>
-          <rect x="6" y="4" width="14" height="7" rx="2" fill="#ffbf47"/>
-          <circle cx="7.5" cy="19.5" r="2.5" fill="#0d1a30" stroke="#f5a623" stroke-width="1"/>
-          <circle cx="20.5" cy="19.5" r="2.5" fill="#0d1a30" stroke="#f5a623" stroke-width="1"/>
-          <rect x="8" y="6" width="5" height="4" rx="1" fill="#87ceeb" opacity=".8"/>
-          <rect x="14" y="6" width="5" height="4" rx="1" fill="#87ceeb" opacity=".8"/>
-          <rect x="1" y="13" width="3" height="2" rx="1" fill="#00d4ff"/>
-          <rect x="24" y="13" width="3" height="2" rx="1" fill="#ff4757"/>
-          <rect x="10" y="2" width="8" height="2.5" rx="1" fill="#f5a623"/>
+          <rect x="3" y="8" width="22" height="11" rx="3" fill="#4285f4"/>
+          <rect x="6" y="4" width="14" height="7" rx="2" fill="#7baaf7"/>
+          <circle cx="7.5" cy="19.5" r="2.5" fill="#0d1a30" stroke="#4285f4" stroke-width="1"/>
+          <circle cx="20.5" cy="19.5" r="2.5" fill="#0d1a30" stroke="#4285f4" stroke-width="1"/>
+          <rect x="8" y="6" width="5" height="4" rx="1" fill="#e8f0fe" opacity=".85"/>
+          <rect x="14" y="6" width="5" height="4" rx="1" fill="#e8f0fe" opacity=".85"/>
+          <rect x="1" y="13" width="3" height="2" rx="1" fill="#fbbc04"/>
+          <rect x="24" y="13" width="3" height="2" rx="1" fill="#ea4335"/>
+          <rect x="10" y="2" width="8" height="2.5" rx="1" fill="#fbbc04"/>
         </svg>
       </div>
-      <span class="logo-text"><span style="color:var(--amber)">taxi</span><span style="font-size:14px;color:var(--text2);font-weight:500;">売上</span></span>
-      <span style="font-size:9px;font-weight:700;color:var(--text3);background:var(--bg4);border:1px solid var(--border2);border-radius:4px;padding:2px 5px;letter-spacing:.5px;font-family:'Orbitron',sans-serif;">v1.0.0</span>
+      <span class="logo-text"><span style="color:var(--blue)">taxi</span><span style="font-size:14px;color:var(--text2);font-weight:500;">売上</span></span>
+      <span style="font-size:9px;font-weight:700;color:var(--blue2);background:rgba(66,133,244,0.12);border:1px solid rgba(66,133,244,0.35);border-radius:4px;padding:2px 6px;letter-spacing:.5px;font-family:'Orbitron',sans-serif;">v1.1.0</span>
     </div>
 
     <div class="header-btns">
@@ -735,45 +837,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
 <div class="screen active" id="sc-home">
 <div class="home-content">
 
-  <!-- MAIN SALES CARD -->
-  <div class="sales-card">
-    <div class="sales-card-header">
-      <div class="sales-card-title"><i class="ti ti-calendar-stats"></i>売上状況</div>
-      <div class="period-chip" id="period-chip">--/-- 〜 --/--</div>
-    </div>
-    <div class="sales-amount">¥<span id="h-total">0</span></div>
-    <div class="tax-row">
-      <span class="tax-badge">税抜</span>
-      <span class="tax-amount">¥<span id="h-tax">0</span></span>
-    </div>
-    <div class="required-box">
-      <div class="required-left">
-        <div class="required-label">必要売上（1日あたり）</div>
-        <div class="required-amount">¥<span id="h-req">0</span></div>
-      </div>
-      <div class="required-divider"></div>
-      <div class="required-right">
-        <div class="required-days-label">残り出勤</div>
-        <div class="required-days"><span id="h-days">0</span><span>日</span></div>
-      </div>
-    </div>
-    <div class="prog-wrap">
-      <div class="prog-track"><div class="prog-fill" id="h-bar" style="width:0%"></div></div>
-      <div class="prog-labels">
-        <span class="prog-pct" id="h-pct">0% 達成</span>
-        <span class="prog-goal">目標 ¥<span id="h-goal-disp">800,000</span></span>
-      </div>
-    </div>
-  </div>
-
-  <!-- TODAY STATS -->
-  <div class="stats-row">
-    <div class="stat-chip"><div class="stat-chip-val" id="s-cnt">0</div><div class="stat-chip-label">乗車数</div></div>
-    <div class="stat-chip"><div class="stat-chip-val" id="s-avg">¥0</div><div class="stat-chip-label">平均単価</div></div>
-    <div class="stat-chip"><div class="stat-chip-val" id="s-max" style="color:var(--green)">¥0</div><div class="stat-chip-label">最高単価</div></div>
-    <div class="stat-chip"><div class="stat-chip-val" id="s-rate" style="color:var(--cyan)">--%</div><div class="stat-chip-label">実車率</div></div>
-  </div>
-
   <!-- ACTION BUTTON (スマート実車ボタン) -->
   <div class="ride-panel" id="ride-panel">
     <div class="ride-panel-header">
@@ -811,6 +874,48 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
         </div>
       </div>
     </button>
+  </div>
+
+  <!-- MAIN SALES CARD -->
+  <div class="sales-card" onclick="toggleMask()" style="cursor:pointer;">
+    <div class="sales-card-header">
+      <div class="sales-card-title"><i class="ti ti-calendar-stats"></i>売上状況</div>
+      <div style="display:flex;align-items:center;gap:7px;">
+        <div class="period-chip" id="period-chip">--/-- 〜 --/--</div>
+        <div id="mask-icon" style="font-size:14px;color:var(--text3);">👁</div>
+      </div>
+    </div>
+    <div class="sales-amount">¥<span id="h-total" class="maskable">0</span></div>
+    <div class="tax-row">
+      <span class="tax-badge">税抜</span>
+      <span class="tax-amount">¥<span id="h-tax" class="maskable">0</span></span>
+    </div>
+    <div class="required-box">
+      <div class="required-left">
+        <div class="required-label">必要売上（1日あたり）</div>
+        <div class="required-amount">¥<span id="h-req" class="maskable">0</span></div>
+      </div>
+      <div class="required-divider"></div>
+      <div class="required-right">
+        <div class="required-days-label">残り出勤</div>
+        <div class="required-days"><span id="h-days">0</span><span>日</span></div>
+      </div>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-track"><div class="prog-fill" id="h-bar" style="width:0%"></div></div>
+      <div class="prog-labels">
+        <span class="prog-pct" id="h-pct">0% 達成</span>
+        <span class="prog-goal">目標 ¥<span id="h-goal-disp">800,000</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TODAY STATS -->
+  <div class="stats-row">
+    <div class="stat-chip"><div class="stat-chip-val" id="s-cnt">0</div><div class="stat-chip-label">乗車数</div></div>
+    <div class="stat-chip"><div class="stat-chip-val" id="s-avg">¥0</div><div class="stat-chip-label">平均単価</div></div>
+    <div class="stat-chip"><div class="stat-chip-val" id="s-max" style="color:var(--green)">¥0</div><div class="stat-chip-label">最高単価</div></div>
+    <div class="stat-chip"><div class="stat-chip-val" id="s-rate" style="color:var(--cyan)">--%</div><div class="stat-chip-label">実車率</div></div>
   </div>
 
   <!-- QUICK INPUT -->
@@ -945,35 +1050,43 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
 <!-- ===== ANALYTICS ===== -->
 <div class="screen" id="sc-analytics">
 <div class="analytics-content">
-  <div class="an-card">
-    <div class="an-title" style="justify-content:space-between;">
-      <span><i class="ti ti-chart-bar"></i>日別売上</span>
-      <div class="period-btns">
-        <span class="pbtn active" data-p="7" onclick="setPeriod(this)">7日</span>
-        <span class="pbtn" data-p="30" onclick="setPeriod(this)">30日</span>
-        <span class="pbtn" data-p="90" onclick="setPeriod(this)">90日</span>
-      </div>
-    </div>
-    <div class="bar-chart" id="bar-chart"></div>
-    <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);" id="bar-range"></div>
+
+  <!-- タブ -->
+  <div class="an-tab-bar">
+    <div class="an-tab active" id="an-tab-monthly" onclick="setAnTab('monthly')">月間実績表</div>
+    <div class="an-tab" id="an-tab-yearly" onclick="setAnTab('yearly')">年間実績表</div>
+    <div class="an-tab" id="an-tab-fiscal" onclick="setAnTab('fiscal')">年度別実績</div>
   </div>
-  <div class="kpi-grid" id="kpi-grid"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-    <div class="an-card">
-      <div class="an-title"><i class="ti ti-car"></i>乗車区分</div>
-      <div class="breakdown-row" id="bd-cat"></div>
+
+  <!-- 月間実績表 -->
+  <div id="an-monthly">
+    <!-- 年月セレクタ -->
+    <div class="an-selector-row">
+      <select class="an-select" id="an-year" onchange="renderMonthly()"></select>
+      <select class="an-select" id="an-month" onchange="renderMonthly()"></select>
     </div>
-    <div class="an-card">
-      <div class="an-title"><i class="ti ti-credit-card"></i>支払方法</div>
-      <div class="breakdown-row" id="bd-pay"></div>
+    <!-- メインカード -->
+    <div class="an-main-card" id="an-main-card"></div>
+    <!-- 日別一覧 -->
+    <div id="an-daily-list"></div>
+  </div>
+
+  <!-- 年間実績表 -->
+  <div id="an-yearly" style="display:none;">
+    <div class="an-selector-row">
+      <select class="an-select" id="an-fyear" onchange="renderYearly()"></select>
     </div>
+    <div id="an-yearly-content"></div>
   </div>
-  <div class="an-card">
-    <div class="an-title"><i class="ti ti-trophy"></i>高額ランキング TOP5</div>
-    <div class="trophy-list" id="trophy-list"></div>
+
+  <!-- 年度別実績 -->
+  <div id="an-fiscal" style="display:none;">
+    <div id="an-fiscal-content"></div>
   </div>
+
 </div>
 </div>
+
 
 <!-- ===== SETTINGS ===== -->
 <div class="screen" id="sc-settings">
@@ -1275,8 +1388,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Noto S
 <script>
 // ===== CONFIG =====
 const SK='taxiboard_v1_sales', SK_CFG='taxiboard_v1_cfg';
-const CAT_COLORS={流し:'#00e676',待機:'#f5a623',アプリ:'#1e90ff',予約:'#b388ff',無線:'#ff4757'};
-const PAY_COLORS={現金:'#00e676',クレカ:'#1e90ff',アプリ決済:'#f5a623',タクチケ:'#b388ff',電子マネー:'#ff4757'};
+const CAT_COLORS={流し:'#34a853',待機:'#fbbc04',アプリ:'#4285f4',予約:'#9b59ff',無線:'#ea4335'};
+const PAY_COLORS={現金:'#34a853',クレカ:'#4285f4',アプリ決済:'#fbbc04',タクチケ:'#ea4335',電子マネー:'#9b59ff'};
 
 // ===== STATE =====
 let sales=[], cfg={monthly:800000,days:5,tax:10,closeDay:20,startTime:'15:00'};
@@ -1285,7 +1398,13 @@ let camStream=null, capturedImage=null, currentPos=null;
 let rideOnPos=null, rideOffPos=null, isRiding=false, rideOnTime=null, rideTimerInterval=null, isAcquiring=false;
 let isDeparted=false, odoStart=null, odoEnd=null;
 
-// ===== ODO METER =====
+// ===== MASK =====
+let isMasked=false;
+function toggleMask(){
+  isMasked=!isMasked;
+  document.querySelector('.sales-card').classList.toggle('masked',isMasked);
+  document.getElementById('mask-icon').textContent=isMasked?'🙈':'👁';
+}
 function openOdoModal(){
   if(!isDeparted){
     // 出庫モード
@@ -1754,9 +1873,9 @@ function renderList(){
         </div>
       </div>
       <div class="sc-pay-row">
-        <div class="sc-pay-btn">${s.payment} ${fmt(s.fare)}</div>
-        <div class="sc-cat-tag">${s.category}</div>
-        ${s.memo?`<div class="sc-cat-tag" style="color:var(--amber);border-color:rgba(245,166,35,.25);background:rgba(245,166,35,.05);">${s.memo}</div>`:''}
+        <div class="sc-pay-btn" style="background:${PAY_COLORS[s.payment]||'var(--blue)'};color:${s.payment==='アプリ決済'||s.payment==='待機'?'#000':'#fff'};">${s.payment} ${fmt(s.fare)}</div>
+        <div class="sc-cat-tag" style="color:${CAT_COLORS[s.category]||'var(--text2)'};border-color:${CAT_COLORS[s.category]||'var(--border2)'}44;background:${CAT_COLORS[s.category]||'var(--bg3)'}22;">${s.category}</div>
+        ${s.memo?`<div class="sc-cat-tag" style="color:var(--blue2);border-color:rgba(66,133,244,.25);background:rgba(66,133,244,.05);">${s.memo}</div>`:''}
       </div>
       <div class="sc-acts">
         <button class="sc-act" onclick="openEdit(${s.id})"><i class="ti ti-edit" style="font-size:13px"></i>編集</button>
@@ -1913,79 +2032,183 @@ function getRideCount(sales, targetId, targetDate){
   const idx = todaySales.findIndex(s=>s.id===targetId);
   return idx >= 0 ? idx+1 : null;
 }
-let analysisPeriod=7;
-function setPeriod(el){
-  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');analysisPeriod=parseInt(el.dataset.p);renderAnalytics();
+// ===== ANALYTICS =====
+let anTab='monthly';
+
+function setAnTab(tab){
+  anTab=tab;
+  ['monthly','yearly','fiscal'].forEach(t=>{
+    document.getElementById('an-tab-'+t).classList.toggle('active',t===tab);
+    const el=document.getElementById('an-'+t);
+    el.style.display=t===tab?'flex':'none';
+    if(t===tab){el.style.flexDirection='column';el.style.gap='10px';}
+  });
+  if(tab==='monthly') renderMonthly();
+  if(tab==='yearly') renderYearly();
+  if(tab==='fiscal') renderFiscal();
 }
-function renderAnalytics(){
-  const n=new Date();
-  const cutoff=new Date(n);cutoff.setDate(cutoff.getDate()-analysisPeriod);
-  const cutStr=cutoff.getFullYear()+'/'+pad(cutoff.getMonth()+1)+'/'+pad(cutoff.getDate());
-  const data=sales.filter(s=>s.date>=cutStr);
-  const total=data.reduce((a,s)=>a+s.total,0);
-  const avg=data.length?Math.round(total/data.length):0;
-  const days=[...new Set(data.map(s=>s.date))].length;
-  const dailyAvg=days?Math.round(total/days):0;
-  const max=data.length?Math.max(...data.map(s=>s.total)):0;
-  // KPI
-  document.getElementById('kpi-grid').innerHTML=`
-    <div class="kpi-chip"><div class="kpi-v" style="color:var(--amber)">${fmt(total)}</div><div class="kpi-l">総売上</div></div>
-    <div class="kpi-chip"><div class="kpi-v" style="color:var(--blue2)">${data.length}回</div><div class="kpi-l">乗車数</div></div>
-    <div class="kpi-chip"><div class="kpi-v" style="color:var(--green)">${fmt(avg)}</div><div class="kpi-l">平均単価</div></div>
-    <div class="kpi-chip"><div class="kpi-v" style="color:var(--purple)">${fmt(dailyAvg)}</div><div class="kpi-l">日平均売上</div></div>
+
+function initAnalyticsSelectors(){
+  const now=new Date();
+  const years=[...new Set(sales.map(s=>s.date.split('/')[0]))];
+  if(!years.includes(String(now.getFullYear()))) years.push(String(now.getFullYear()));
+  years.sort((a,b)=>b-a);
+  ['an-year','an-fyear'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.innerHTML=years.map(y=>`<option value="${y}"${y==now.getFullYear()?'selected':''}>${y}年</option>`).join('');
+  });
+  const mEl=document.getElementById('an-month');
+  if(mEl) mEl.innerHTML=Array.from({length:12},(_,i)=>
+    `<option value="${i+1}"${i+1==now.getMonth()+1?'selected':''}>${i+1}月度</option>`).join('');
+}
+
+function getPeriodRange(year,month){
+  const close=cfg.closeDay||20;
+  const prevM=month===1?12:month-1;
+  const prevY=month===1?year-1:year;
+  const startDate=new Date(prevY,prevM-1,close+1);
+  const endDate=new Date(year,month-1,close);
+  const fmtD=d=>`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())}`;
+  return {start:fmtD(startDate),end:fmtD(endDate),
+    label:`${year}年 ${month}月度`,
+    range:`${fmtD(startDate)} 〜 ${fmtD(endDate)}`};
+}
+
+function renderMonthly(){
+  const year=parseInt(document.getElementById('an-year')?.value||new Date().getFullYear());
+  const month=parseInt(document.getElementById('an-month')?.value||new Date().getMonth()+1);
+  const {start,end,label,range}=getPeriodRange(year,month);
+  const periodSales=sales.filter(s=>s.date>=start&&s.date<=end);
+  const total=periodSales.reduce((a,s)=>a+s.total,0);
+  const taxExcl=Math.round(total/(1+(cfg.tax||10)/100));
+  const workDays=[...new Set(periodSales.map(s=>s.date))].length;
+  const avg=periodSales.length?Math.round(total/periodSales.length):0;
+  const pct=cfg.monthly?Math.min(100,Math.round(total/cfg.monthly*100)):0;
+  const goalAchieved=pct>=100;
+
+  document.getElementById('an-main-card').innerHTML=`
+    <div class="an-period-label">${label}</div>
+    <div class="an-period-range">${range}</div>
+    <div class="an-income-label">月間累計営収（税込）</div>
+    <div class="an-income">¥ ${fmtNum(total)}</div>
+    <div class="an-tax-row"><span class="an-tax-badge">税抜</span><span class="an-tax-val">¥${fmtNum(taxExcl)}</span></div>
+    <div class="an-meta-row">
+      <div class="an-meta-chip">
+        <div class="an-meta-val" style="color:var(--cyan)">${workDays}日</div>
+        <div class="an-meta-label">出勤日数</div>
+      </div>
+      <div class="an-meta-chip">
+        <div class="an-meta-val" style="color:var(--blue2)">${periodSales.length}回</div>
+        <div class="an-meta-label">乗車回数</div>
+      </div>
+      <div class="an-meta-chip">
+        <div class="an-meta-val">${fmt(avg)}</div>
+        <div class="an-meta-label">平均単価</div>
+      </div>
+    </div>
+    <div class="an-goal-row">
+      <span class="an-goal-label">${goalAchieved?'🏆 目標クリア！':'🎯 目標まで'}</span>
+      <span class="an-goal-val">${goalAchieved?pct+'% 達成':fmt(Math.max(0,cfg.monthly-total)+' 残り')}</span>
+    </div>
+    <div style="margin-top:8px;">
+      <div style="height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;">
+        <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--amber),var(--amber2));border-radius:3px;transition:width 1s ease;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:3px;">
+        <span>${pct}% 達成</span><span>目標 ${fmt(cfg.monthly)}</span>
+      </div>
+    </div>
   `;
-  // bar chart
-  const dailyMap={};
-  for(let i=analysisPeriod-1;i>=0;i--){
-    const d=new Date(n);d.setDate(d.getDate()-i);
-    const key=d.getFullYear()+'/'+pad(d.getMonth()+1)+'/'+pad(d.getDate());
-    dailyMap[key]=0;
+
+  // 日別一覧
+  const byDay={};
+  periodSales.forEach(s=>{if(!byDay[s.date])byDay[s.date]=[];byDay[s.date].push(s);});
+  const sorted=Object.entries(byDay).sort((a,b)=>b[0].localeCompare(a[0]));
+  const dayNames=['日','月','火','水','木','金','土'];
+  document.getElementById('an-daily-list').innerHTML=
+    `<div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:4px 2px 6px;">${label} 日別実績 ${sorted.length}日</div>`+
+    (sorted.length===0?`<div style="text-align:center;color:var(--text3);font-size:13px;padding:20px;">この期間のデータなし</div>`:
+    sorted.map(([date,rides],idx)=>{
+      const dayTotal=rides.reduce((a,s)=>a+s.total,0);
+      const d=new Date(date.replace(/\//g,'-'));
+      const dow=dayNames[d.getDay()];
+      const dowColor=d.getDay()===0?'var(--red)':d.getDay()===6?'var(--cyan)':'var(--text3)';
+      return `<div class="an-day-item">
+        <div class="an-day-header" onclick="toggleDayDetail('day-${idx}','chev-${idx}')">
+          <div class="an-day-num">${pad(d.getDate())}</div>
+          <div class="an-day-date" style="color:${dowColor}">${date}（${dow}）</div>
+          <div class="an-day-cnt">${rides.length}回</div>
+          <div class="an-day-amt">${fmt(dayTotal)}</div>
+          <div class="an-day-chevron" id="chev-${idx}">▼</div>
+        </div>
+        <div class="an-day-rides" id="day-${idx}">
+          ${[...rides].reverse().map(s=>`
+            <div class="an-ride-row">
+              <span class="an-ride-time">${s.time}</span>
+              <span class="an-ride-pay">${s.payment}</span>
+              <span class="an-ride-cat">${s.category}</span>
+              <span class="an-ride-amt">${fmt(s.total)}</span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+    }).join(''));
+}
+
+function toggleDayDetail(id,chevId){
+  const el=document.getElementById(id);
+  const chev=document.getElementById(chevId);
+  const open=el.classList.toggle('open');
+  if(chev) chev.style.transform=open?'rotate(180deg)':'';
+}
+
+function renderYearly(){
+  const year=parseInt(document.getElementById('an-fyear')?.value||new Date().getFullYear());
+  const ySales=sales.filter(s=>s.date.startsWith(String(year)+'/'));
+  const total=ySales.reduce((a,s)=>a+s.total,0);
+  const byMonth={};
+  for(let m=1;m<=12;m++) byMonth[m]=[];
+  ySales.forEach(s=>{const m=parseInt(s.date.split('/')[1]);byMonth[m].push(s);});
+  const maxM=Math.max(...Object.values(byMonth).map(v=>v.reduce((a,s)=>a+s.total,0)),1);
+  document.getElementById('an-yearly-content').innerHTML=`
+    <div style="background:var(--bg2);border:1px solid rgba(245,166,35,.3);border-radius:var(--radius);padding:14px;text-align:center;margin-bottom:8px;">
+      <div style="font-size:12px;color:var(--text3);margin-bottom:4px;">${year}年 年間売上</div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:28px;font-weight:900;color:var(--amber);">¥${fmtNum(total)}</div>
+      <div style="font-size:11px;color:var(--text2);margin-top:4px;">${ySales.length}回乗車</div>
+    </div>
+    ${Array.from({length:12},(_,i)=>{
+      const m=i+1, mS=byMonth[m], mT=mS.reduce((a,s)=>a+s.total,0);
+      const pct=Math.round(mT/maxM*100);
+      return `<div class="an-month-row">
+        <div class="an-month-label">${m}月</div>
+        <div class="an-month-bar-wrap"><div class="an-month-bar" style="width:${mT?pct:0}%"></div></div>
+        <div class="an-month-cnt">${mS.length}回</div>
+        <div class="an-month-amt">${mT?fmt(mT):'--'}</div>
+      </div>`;
+    }).join('')}`;
+}
+
+function renderFiscal(){
+  const years=[...new Set(sales.map(s=>s.date.split('/')[0]))].sort((a,b)=>b-a);
+  if(!years.length){
+    document.getElementById('an-fiscal-content').innerHTML='<div style="text-align:center;color:var(--text3);font-size:13px;padding:30px;">データなし</div>';
+    return;
   }
-  data.forEach(s=>{if(dailyMap[s.date]!==undefined)dailyMap[s.date]+=s.total;});
-  const vals=Object.values(dailyMap),keys=Object.keys(dailyMap);
-  const maxV=Math.max(...vals,1);
-  const bc=document.getElementById('bar-chart');
-  bc.innerHTML=vals.map((v,i)=>{
-    const h=Math.max(3,Math.round(v/maxV*82));
-    const isToday=keys[i]===todayStr();
-    const color=isToday?'var(--amber)':v>0?'var(--blue)':'var(--bg4)';
-    return `<div class="bar-col">
-      <div class="bar-val-label">${v>0?Math.round(v/1000)+'k':''}</div>
-      <div class="bar-fill" style="height:${h}px;background:${color};${isToday?'box-shadow:0 0 8px var(--amber-glow)':''}"></div>
-      ${analysisPeriod<=14?`<div class="bar-day-label">${keys[i].slice(8)}</div>`:''}
+  document.getElementById('an-fiscal-content').innerHTML=years.map(y=>{
+    const yS=sales.filter(s=>s.date.startsWith(y+'/'));
+    const total=yS.reduce((a,s)=>a+s.total,0);
+    const taxExcl=Math.round(total/(1+(cfg.tax||10)/100));
+    const days=[...new Set(yS.map(s=>s.date))].length;
+    return `<div class="an-fiscal-item">
+      <div class="an-fiscal-year">${y}年</div>
+      <div class="an-fiscal-total">¥${fmtNum(total)}</div>
+      <div class="an-fiscal-sub">税抜 ¥${fmtNum(taxExcl)} ／ ${yS.length}回乗車 ／ ${days}日稼働</div>
     </div>`;
   }).join('');
-  document.getElementById('bar-range').innerHTML=`<span>${keys[0]?.slice(5)}</span><span>${keys[keys.length-1]?.slice(5)}</span>`;
-  // breakdowns
-  const catMap={},payMap={};
-  data.forEach(s=>{
-    catMap[s.category]=(catMap[s.category]||0)+s.total;
-    payMap[s.payment]=(payMap[s.payment]||0)+s.total;
-  });
-  function renderBd(map,colorMap,elId){
-    const tot=Object.values(map).reduce((a,b)=>a+b,0)||1;
-    document.getElementById(elId).innerHTML=Object.entries(map).sort((a,b)=>b[1]-a[1])
-      .map(([k,v])=>{
-        const pct=Math.round(v/tot*100);
-        const c=colorMap[k]||'#8ba3c7';
-        return `<div class="bd-item">
-          <div class="bd-labels"><span class="bd-name">${k}</span><span class="bd-pct" style="color:${c}">${pct}%</span></div>
-          <div class="bd-bar"><div class="bd-fill" style="width:${pct}%;background:${c}"></div></div>
-        </div>`;
-      }).join('')||'<div style="font-size:11px;color:var(--text3)">データなし</div>';
-  }
-  renderBd(catMap,CAT_COLORS,'bd-cat');
-  renderBd(payMap,PAY_COLORS,'bd-pay');
-  // trophy
-  const medals=['🥇','🥈','🥉','4️⃣','5️⃣'];
-  document.getElementById('trophy-list').innerHTML=
-    [...data].sort((a,b)=>b.total-a.total).slice(0,5).map((s,i)=>`
-      <div class="trophy-item">
-        <span class="trophy-medal">${medals[i]}</span>
-        <div class="trophy-info"><div class="trophy-date">${s.date} ${s.time} · ${s.category}</div></div>
-        <div class="trophy-amt">${fmt(s.total)}</div>
-      </div>`).join('')||'<div style="font-size:11px;color:var(--text3);text-align:center;padding:8px">データなし</div>';
+}
+
+function renderAnalytics(){
+  initAnalyticsSelectors();
+  setAnTab(anTab);
 }
 
 // ===== SETTINGS =====
