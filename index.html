@@ -2300,11 +2300,18 @@ async function fetchWeather(){
     },
     err => {
       const msgs = {
-        1: '🔒 許可されていません',
+        1: '🔒 位置情報の許可が必要です',
         2: '📡 電波が弱い',
         3: '⏱ タイムアウト'
       };
-      locEl.innerHTML = `<span style="cursor:pointer;color:var(--amber);" onclick="fetchWeather()">${msgs[err.code]||'取得失敗'} 再試行▶</span>`;
+      locEl.innerHTML = `<span style="cursor:pointer;color:var(--blue2);text-decoration:underline;" onclick="fetchWeather()">${msgs[err.code]||'取得失敗'} — 再試行</span>`;
+      // フォールバック：大阪の座標で天気だけ取得
+      const lat=34.6937,lng=135.5023;
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true&hourly=relativehumidity_2m&timezone=Asia%2FTokyo`)
+        .then(r=>r.json()).then(wx=>{
+          document.getElementById('wx-temp').textContent=Math.round(wx.current_weather.temperature);
+          document.getElementById('wx-hum').textContent=wx.hourly.relativehumidity_2m[new Date().getHours()]??'--';
+        }).catch(()=>{});
     },
     {enableHighAccuracy: true, timeout: 10000, maximumAge: 60000}
   );
